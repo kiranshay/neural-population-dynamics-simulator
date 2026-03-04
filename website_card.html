@@ -1,0 +1,68 @@
+I'll generate the HTML card for the Neural Population Dynamics Simulator project. Based on the existing portfolio structure, here's the card:
+
+## HTML Card to Add
+
+```html
+<div class="card project-card">
+    <div class="card-header">
+        <div class="project-title-row">
+            <h3>Neural Population Dynamics Simulator</h3>
+            <div class="project-links">
+                <a href="https://github.com/kiranshay/neural-population-dynamics-simulator" target="_blank" class="project-link">
+                    <i data-lucide="github"></i>
+                </a>
+                <a href="https://neuralpopulationdyna.streamlit.app" target="_blank" class="project-link">
+                    <i data-lucide="external-link"></i>
+                </a>
+            </div>
+        </div>
+        <span class="status status-planned">Planned</span>
+    </div>
+    <div class="card-content">
+        <p>Monte Carlo simulation of stochastic firing patterns in neural populations, modeling synaptic noise, neural variability, and emergent network dynamics using Gillespie algorithms and Poisson spiking models.</p>
+        <div class="tags">
+            <span class="tag tag-primary">Monte Carlo</span>
+            <span class="tag tag-secondary">Stochastic Modeling</span>
+            <span class="tag tag-accent">Neuroscience</span>
+            <span class="tag tag-neutral">Simulation</span>
+        </div>
+    </div>
+</div>
+```
+
+## Instructions
+
+1. **Where to place it**: Add this card in the `projects.html` file within the `<div class="projects-grid">` section. Place it after the existing project cards.
+
+2. **File location**: `/Users/kiranshay/projects/kiranshay-website/projects.html`
+
+3. **Update filter tags**: Ensure the filter buttons in the projects page include the new tags. If "Monte Carlo", "Stochastic Modeling", "Neuroscience", or "Simulation" tags don't exist in the filter section, add them:
+
+```html
+<!-- Add these to the filter buttons section if they don't exist -->
+<button class="filter-btn" data-filter="monte-carlo">Monte Carlo</button>
+<button class="filter-btn" data-filter="stochastic-modeling">Stochastic Modeling</button>
+<button class="filter-btn" data-filter="neuroscience">Neuroscience</button>
+<button class="filter-btn" data-filter="simulation">Simulation</button>
+```
+
+4. **Update CSS data attributes**: Add corresponding data attributes to the card for filtering:
+
+```html
+<div class="card project-card" data-tags="monte-carlo stochastic-modeling neuroscience simulation">
+```
+
+## Git Commands
+
+```bash
+cd /Users/kiranshay/projects/kiranshay-website
+git add projects.html
+git commit -m "Add Neural Population Dynamics Simulator project card
+
+- Added new planned project for Monte Carlo neural simulation
+- Includes GitHub and demo links
+- Added relevant tags: Monte Carlo, Stochastic Modeling, Neuroscience, Simulation"
+git push origin main
+```
+
+The card follows the existing design patterns with appropriate status, tags, and links. The project is marked as "planned" status and includes both GitHub and demo URLs as requested.

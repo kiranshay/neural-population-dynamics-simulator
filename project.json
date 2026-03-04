@@ -1,0 +1,20 @@
+{
+  "name": "Neural Population Dynamics Simulator",
+  "description": "Monte Carlo simulation of stochastic firing patterns in neural populations, modeling synaptic noise, neural variability, and emergent network dynamics.",
+  "problem_statement": "Neural populations exhibit complex stochastic dynamics that are difficult to study experimentally. How can we simulate realistic population activity?",
+  "technical_approach": "Gillespie algorithm for exact stochastic simulation. Poisson spiking models with refractory periods. Correlated noise injection and mean-field approximations for large-scale networks.",
+  "data_sources": [
+    "Allen Brain Observatory",
+    "Neural Latents Benchmark",
+    "Simulated data with realistic parameters"
+  ],
+  "tags": [
+    "Monte Carlo",
+    "Stochastic Modeling",
+    "Neuroscience",
+    "Simulation"
+  ],
+  "status": "planned",
+  "github_url": "https://github.com/kiranshay/neural-population-dynamics-simulator",
+  "demo_url": "https://neuralpopulationdyna.streamlit.app"
+}
