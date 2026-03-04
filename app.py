@@ -629,152 +629,92 @@ with tab4:
     # Mathematical Framework Section
     st.markdown("### Mathematical Framework")
 
-    st.markdown("""
-    <div class="theory-box">
-    <h4>1. Gillespie Algorithm (Stochastic Simulation Algorithm)</h4>
+    with st.expander("**1. Gillespie Algorithm (Stochastic Simulation Algorithm)**", expanded=True):
+        st.markdown("""
+The **Gillespie algorithm** (1977) provides *exact* stochastic simulation by treating neural spiking as a continuous-time Markov process. Unlike discrete-time methods that approximate dynamics, Gillespie samples the exact timing of events.
 
-    <p>The <strong>Gillespie algorithm</strong> (1977) provides <em>exact</em> stochastic simulation by treating neural spiking as a continuous-time Markov process. Unlike discrete-time methods that approximate dynamics, Gillespie samples the exact timing of events.</p>
+**Algorithm Steps:**
+1. **Compute total rate:** Λ(t) = Σᵢ λᵢ(t), where λᵢ is neuron i's instantaneous firing rate
+2. **Sample waiting time:** Δt ~ Exponential(Λ), giving P(Δt > τ) = exp(-Λτ)
+3. **Select firing neuron:** P(neuron i fires) = λᵢ(t) / Λ(t)
+4. **Update state:** Record spike, update refractory states, advance time by Δt
 
-    <p><strong>Algorithm Steps:</strong></p>
-    <ol>
-        <li><strong>Compute total rate:</strong> Λ(t) = Σᵢ λᵢ(t), where λᵢ is neuron i's instantaneous firing rate</li>
-        <li><strong>Sample waiting time:</strong> Δt ~ Exponential(Λ), giving P(Δt > τ) = exp(-Λτ)</li>
-        <li><strong>Select firing neuron:</strong> P(neuron i fires) = λᵢ(t) / Λ(t)</li>
-        <li><strong>Update state:</strong> Record spike, update refractory states, advance time by Δt</li>
-    </ol>
+**Why exact?** The exponential waiting time is the *memoryless* property of Poisson processes. Combined with proportional selection, this exactly samples from the underlying continuous-time dynamics without discretization error.
+        """)
 
-    <p><strong>Why exact?</strong> The exponential waiting time is the <em>memoryless</em> property of Poisson processes. Combined with proportional selection, this exactly samples from the underlying continuous-time dynamics without discretization error.</p>
-    </div>
-    """, unsafe_allow_html=True)
+    with st.expander("**2. Inhomogeneous Poisson Process with Refractory Period**", expanded=True):
+        st.markdown("""
+Each neuron generates spikes as a **time-varying Poisson process** with rate modulated by multiple factors:
+        """)
+        st.latex(r"\lambda_i(t) = \lambda_0 \cdot S(t) \cdot R(t - t_{last}) \cdot \exp(\sigma \cdot \eta_i(t)) \cdot (1 + \alpha \cdot A(t))")
+        st.markdown("""
+**Where:**
+- **λ₀** = Base firing rate (Hz) — intrinsic excitability
+- **S(t)** = Stimulus gain function — external drive (1 + s during stimulation)
+- **R(Δt)** = Refractory function — Heaviside step H(Δt - τᵣₑf), enforcing absolute refractory period
+- **ηᵢ(t)** = Correlated Gaussian noise — synaptic variability
+- **A(t)** = Recent population activity — recurrent network effects
 
-    st.markdown("""
-    <div class="theory-box">
-    <h4>2. Inhomogeneous Poisson Process with Refractory Period</h4>
+**Refractory Period:** After firing, a neuron enters an *absolute refractory period* (τᵣₑf ≈ 1-3 ms) during which it cannot fire again. This arises from Na⁺ channel inactivation and sets the maximum firing rate: f_max = 1/τᵣₑf ≈ 300-1000 Hz.
+        """)
 
-    <p>Each neuron generates spikes as a <strong>time-varying Poisson process</strong> with rate modulated by multiple factors:</p>
+    with st.expander("**3. Correlated Noise via Cholesky Decomposition**", expanded=True):
+        st.markdown("""
+Real neural populations exhibit **correlated variability** — neurons don't fluctuate independently. We model this with multivariate Gaussian noise:
+        """)
+        st.latex(r"\vec{\eta} = L \cdot \vec{z}, \quad \text{where } \vec{z} \sim \mathcal{N}(0, I) \text{ and } C = LL^T")
+        st.markdown("""
+**Correlation Structure:**
+- **Correlation matrix:** Cᵢⱼ = ρ for i ≠ j, and Cᵢᵢ = 1
+- **Cholesky factor:** L = chol(C) — lower triangular matrix
+- **Result:** E[ηᵢηⱼ] = ρ for all neuron pairs
 
-    <p style="text-align: center; font-family: 'Times New Roman', serif; font-size: 1.1rem; margin: 1rem 0;">
-        λᵢ(t) = λ₀ · S(t) · R(t - tₗₐₛₜ) · exp(σ · ηᵢ(t)) · (1 + α · A(t))
-    </p>
+**Biological origin:** Correlated fluctuations arise from shared synaptic input, common neuromodulatory signals, and recurrent connectivity. Correlation magnitude (ρ ≈ 0.1-0.3 in cortex) reflects functional coupling strength.
+        """)
 
-    <p><strong>Where:</strong></p>
-    <ul>
-        <li><strong>λ₀</strong> = Base firing rate (Hz) — intrinsic excitability</li>
-        <li><strong>S(t)</strong> = Stimulus gain function — external drive (1 + s during stimulation)</li>
-        <li><strong>R(Δt)</strong> = Refractory function — Heaviside step H(Δt - τᵣₑf), enforcing absolute refractory period</li>
-        <li><strong>ηᵢ(t)</strong> = Correlated Gaussian noise — synaptic variability</li>
-        <li><strong>A(t)</strong> = Recent population activity — recurrent network effects</li>
-    </ul>
-
-    <p><strong>Refractory Period:</strong> After firing, a neuron enters an <em>absolute refractory period</em> (τᵣₑf ≈ 1-3 ms) during which it cannot fire again. This arises from Na⁺ channel inactivation and sets the maximum firing rate: fₘₐₓ = 1/τᵣₑf ≈ 300-1000 Hz.</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("""
-    <div class="theory-box">
-    <h4>3. Correlated Noise via Cholesky Decomposition</h4>
-
-    <p>Real neural populations exhibit <strong>correlated variability</strong> — neurons don't fluctuate independently. We model this with multivariate Gaussian noise:</p>
-
-    <p style="text-align: center; font-family: 'Times New Roman', serif; font-size: 1.1rem; margin: 1rem 0;">
-        η⃗ = L · z⃗, where z⃗ ~ N(0, I) and C = LLᵀ
-    </p>
-
-    <p><strong>Correlation Structure:</strong></p>
-    <ul>
-        <li><strong>Correlation matrix:</strong> Cᵢⱼ = ρ for i ≠ j, and Cᵢᵢ = 1</li>
-        <li><strong>Cholesky factor:</strong> L = chol(C) — lower triangular matrix</li>
-        <li><strong>Result:</strong> E[ηᵢηⱼ] = ρ for all neuron pairs</li>
-    </ul>
-
-    <p><strong>Biological origin:</strong> Correlated fluctuations arise from shared synaptic input, common neuromodulatory signals, and recurrent connectivity. Correlation magnitude (ρ ≈ 0.1-0.3 in cortex) reflects functional coupling strength.</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("""
-    <div class="theory-box">
-    <h4>4. Mean-Field Approximation</h4>
-
-    <p>For large populations (N → ∞), individual spike trains average out, and the <strong>population rate</strong> becomes deterministic:</p>
-
-    <p style="text-align: center; font-family: 'Times New Roman', serif; font-size: 1.1rem; margin: 1rem 0;">
-        r(t) = (1/N) Σᵢ λᵢ(t) → E[λ(t)] as N → ∞
-    </p>
-
-    <p>The mean-field rate provides a baseline prediction. Deviations from mean-field arise from:</p>
-    <ul>
-        <li><strong>Finite-size fluctuations:</strong> σᵣ ∝ 1/√N — smaller populations are noisier</li>
-        <li><strong>Correlated noise:</strong> Shared variability doesn't average out</li>
-        <li><strong>Network interactions:</strong> Feedback creates non-linear dynamics</li>
-    </ul>
-    </div>
-    """, unsafe_allow_html=True)
+    with st.expander("**4. Mean-Field Approximation**", expanded=True):
+        st.markdown("""
+For large populations (N → ∞), individual spike trains average out, and the **population rate** becomes deterministic:
+        """)
+        st.latex(r"r(t) = \frac{1}{N} \sum_i \lambda_i(t) \rightarrow \mathbb{E}[\lambda(t)] \text{ as } N \rightarrow \infty")
+        st.markdown("""
+The mean-field rate provides a baseline prediction. Deviations from mean-field arise from:
+- **Finite-size fluctuations:** σᵣ ∝ 1/√N — smaller populations are noisier
+- **Correlated noise:** Shared variability doesn't average out
+- **Network interactions:** Feedback creates non-linear dynamics
+        """)
 
     # Biological Relevance Section
     st.markdown("### Biological Relevance")
 
-    st.markdown("""
-    <div class="theory-box">
-    <h4>🧠 Neural Population Coding</h4>
+    with st.expander("**🧠 Neural Population Coding**", expanded=True):
+        st.markdown("""
+**Why populations?** The brain doesn't rely on single neurons. Populations of 100-10,000+ neurons work together to:
+- **Average out noise:** Individual neurons are unreliable (CV ≈ 1), but populations achieve precision through averaging
+- **Multiplex information:** Different aspects encoded in rate, timing, and correlations
+- **Enable robust computation:** Graceful degradation if individual neurons fail
 
-    <p><strong>Why populations?</strong> The brain doesn't rely on single neurons. Populations of 100-10,000+ neurons work together to:</p>
-    <ul>
-        <li><strong>Average out noise:</strong> Individual neurons are unreliable (CV ≈ 1), but populations achieve precision through averaging</li>
-        <li><strong>Multiplex information:</strong> Different aspects encoded in rate, timing, and correlations</li>
-        <li><strong>Enable robust computation:</strong> Graceful degradation if individual neurons fail</li>
-    </ul>
+**Population rate coding:** The simplest code — stimulus intensity maps to mean firing rate. Our simulator shows this: stronger stimuli → higher population rate during the stimulus window.
+        """)
 
-    <p><strong>Population rate coding:</strong> The simplest code — stimulus intensity maps to mean firing rate. Our simulator shows this: stronger stimuli → higher population rate during the stimulus window.</p>
-    </div>
-    """, unsafe_allow_html=True)
+    with st.expander("**🔬 Experimental Techniques This Simulates**", expanded=True):
+        st.markdown("""
+| Technique | What It Measures | Simulator Analog |
+|-----------|------------------|------------------|
+| **Multi-electrode arrays** | Spike times from ~100 neurons | Raster plot, ISI distribution |
+| **Calcium imaging** | Bulk fluorescence ∝ population activity | Population rate time series |
+| **Local field potential (LFP)** | Summed synaptic currents | Power spectrum analysis |
+| **Neuropixels probes** | 1000s of neurons simultaneously | Correlation matrices, population statistics |
+        """)
 
-    st.markdown("""
-    <div class="theory-box">
-    <h4>🔬 Experimental Techniques This Simulates</h4>
-
-    <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
-        <tr style="border-bottom: 2px solid #e2e8f0;">
-            <th style="text-align: left; padding: 8px; color: #334155;">Technique</th>
-            <th style="text-align: left; padding: 8px; color: #334155;">What It Measures</th>
-            <th style="text-align: left; padding: 8px; color: #334155;">Simulator Analog</th>
-        </tr>
-        <tr style="border-bottom: 1px solid #e2e8f0;">
-            <td style="padding: 8px;"><strong>Multi-electrode arrays</strong></td>
-            <td style="padding: 8px;">Spike times from ~100 neurons</td>
-            <td style="padding: 8px;">Raster plot, ISI distribution</td>
-        </tr>
-        <tr style="border-bottom: 1px solid #e2e8f0;">
-            <td style="padding: 8px;"><strong>Calcium imaging</strong></td>
-            <td style="padding: 8px;">Bulk fluorescence ∝ population activity</td>
-            <td style="padding: 8px;">Population rate time series</td>
-        </tr>
-        <tr style="border-bottom: 1px solid #e2e8f0;">
-            <td style="padding: 8px;"><strong>Local field potential (LFP)</strong></td>
-            <td style="padding: 8px;">Summed synaptic currents</td>
-            <td style="padding: 8px;">Power spectrum analysis</td>
-        </tr>
-        <tr>
-            <td style="padding: 8px;"><strong>Neuropixels probes</strong></td>
-            <td style="padding: 8px;">1000s of neurons simultaneously</td>
-            <td style="padding: 8px;">Correlation matrices, population statistics</td>
-        </tr>
-    </table>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("""
-    <div class="theory-box">
-    <h4>🏥 Clinical Relevance</h4>
-
-    <p>Understanding population dynamics informs treatment of neurological disorders:</p>
-    <ul>
-        <li><strong>Epilepsy:</strong> Pathological hypersynchrony — too much correlation, runaway excitation. Compare "Highly Excitable" regime.</li>
-        <li><strong>Parkinson's disease:</strong> Abnormal beta oscillations (13-30 Hz) in basal ganglia. Our spectral analysis detects such rhythms.</li>
-        <li><strong>Schizophrenia:</strong> Disrupted gamma synchrony during working memory. Correlation structure matters for cognition.</li>
-        <li><strong>Anesthesia:</strong> Loss of consciousness correlates with breakdown of complex dynamics → more regular, correlated activity.</li>
-    </ul>
-    </div>
-    """, unsafe_allow_html=True)
+    with st.expander("**🏥 Clinical Relevance**", expanded=True):
+        st.markdown("""
+Understanding population dynamics informs treatment of neurological disorders:
+- **Epilepsy:** Pathological hypersynchrony — too much correlation, runaway excitation. Compare "Highly Excitable" regime.
+- **Parkinson's disease:** Abnormal beta oscillations (13-30 Hz) in basal ganglia. Our spectral analysis detects such rhythms.
+- **Schizophrenia:** Disrupted gamma synchrony during working memory. Correlation structure matters for cognition.
+- **Anesthesia:** Loss of consciousness correlates with breakdown of complex dynamics → more regular, correlated activity.
+        """)
 
     # Parameter Guide
     st.markdown("### Parameter Effects Guide")
