@@ -16,57 +16,203 @@ st.set_page_config(
 # Custom CSS for professional styling
 st.markdown("""
 <style>
-    .main-header {
-        font-size: 3rem;
-        font-weight: bold;
-        color: #2E86AB;
-        text-align: center;
-        margin-bottom: 1rem;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    /* Import Google Font */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    /* Global styles */
+    .main .block-container {
+        padding-top: 2rem;
+        max-width: 1200px;
     }
-    
+
+    .main-header {
+        font-family: 'Inter', sans-serif;
+        font-size: 2.75rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-align: center;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.02em;
+    }
+
     .subtitle {
-        font-size: 1.2rem;
-        color: #666;
+        font-family: 'Inter', sans-serif;
+        font-size: 1.1rem;
+        color: #64748b;
         text-align: center;
         margin-bottom: 2rem;
-        font-style: italic;
+        font-weight: 400;
     }
-    
+
+    /* Enhanced Tab Styling */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+        background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+        padding: 8px;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
+    }
+
+    .stTabs [data-baseweb="tab"] {
+        height: 52px;
+        background: transparent;
+        border-radius: 12px;
+        padding: 0 24px;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: #475569;
+        border: none;
+        transition: all 0.2s ease;
+    }
+
+    .stTabs [data-baseweb="tab"]:hover {
+        background: rgba(102, 126, 234, 0.08);
+        color: #667eea;
+    }
+
+    .stTabs [aria-selected="true"] {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        color: white !important;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.35);
+    }
+
+    .stTabs [data-baseweb="tab-highlight"] {
+        display: none;
+    }
+
+    .stTabs [data-baseweb="tab-border"] {
+        display: none;
+    }
+
+    /* Metric Cards */
     .metric-container {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 1rem;
-        border-radius: 10px;
+        padding: 1.25rem;
+        border-radius: 16px;
         color: white;
         text-align: center;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 8px 24px rgba(102, 126, 234, 0.25);
+        border: 1px solid rgba(255,255,255,0.1);
     }
-    
+
+    .metric-container h3 {
+        font-family: 'Inter', sans-serif;
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin: 0 0 4px 0;
+    }
+
+    .metric-container p {
+        font-size: 0.85rem;
+        opacity: 0.9;
+        margin: 0;
+        font-weight: 500;
+    }
+
+    /* Theory Box */
     .theory-box {
-        background: #f8f9fa;
-        border-left: 4px solid #2E86AB;
-        padding: 1rem;
-        margin: 1rem 0;
-        border-radius: 5px;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border-left: 4px solid #667eea;
+        padding: 1.5rem;
+        margin: 1.25rem 0;
+        border-radius: 0 12px 12px 0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
-    
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 2rem;
+
+    .theory-box h4 {
+        font-family: 'Inter', sans-serif;
+        color: #334155;
+        margin-top: 0;
+        font-weight: 600;
     }
-    
-    .stTabs [data-baseweb="tab"] {
-        height: 50px;
-        background-color: #f0f2f6;
-        border-radius: 5px;
-        padding: 0 1rem;
+
+    .theory-box h5 {
+        font-family: 'Inter', sans-serif;
+        color: #475569;
+        margin-top: 1rem;
+        font-weight: 600;
     }
-    
+
+    /* Section Headers */
+    .section-header {
+        font-family: 'Inter', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    /* Sidebar Styling */
+    .css-1d391kg, [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+    }
+
+    [data-testid="stSidebar"] .stMarkdown h2,
+    [data-testid="stSidebar"] .stMarkdown h3 {
+        color: #f8fafc !important;
+        font-family: 'Inter', sans-serif;
+    }
+
+    [data-testid="stSidebar"] .stSlider label {
+        color: #cbd5e1 !important;
+    }
+
+    /* Info Box */
+    .stAlert {
+        border-radius: 12px;
+        border: none;
+    }
+
+    /* Footer */
     .footer {
         margin-top: 3rem;
-        padding: 2rem 0;
-        border-top: 1px solid #ddd;
+        padding: 2rem;
+        background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
         text-align: center;
-        color: #666;
+    }
+
+    .footer p {
+        color: #64748b;
+        font-family: 'Inter', sans-serif;
+        margin: 0.5rem 0;
+    }
+
+    .footer a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s ease;
+    }
+
+    .footer a:hover {
+        color: #764ba2;
+    }
+
+    /* Button Styling */
+    .stButton > button {
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        border-radius: 10px;
+        transition: all 0.2s ease;
+    }
+
+    .stButton > button[kind="primary"] {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+    }
+
+    .stButton > button[kind="primary"]:hover {
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        transform: translateY(-1px);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -231,7 +377,7 @@ if 'simulation_done' not in st.session_state:
 tab1, tab2, tab3, tab4 = st.tabs(["📊 Population Dynamics", "🎯 Raster Plot", "📈 Statistics", "🧮 Theory"])
 
 with tab1:
-    st.markdown("### Population Firing Rate Dynamics")
+    st.markdown('<p class="section-header">📊 Population Firing Rate Dynamics</p>', unsafe_allow_html=True)
     
     if st.session_state.simulation_done:
         simulator = st.session_state.simulator
@@ -325,7 +471,7 @@ with tab1:
         st.pyplot(fig)
 
 with tab2:
-    st.markdown("### Neural Raster Plot")
+    st.markdown('<p class="section-header">🎯 Neural Raster Plot</p>', unsafe_allow_html=True)
     
     if st.session_state.simulation_done:
         simulator = st.session_state.simulator
@@ -399,7 +545,7 @@ with tab2:
         st.info("👈 Run simulation first to see raster plots and spike analysis")
 
 with tab3:
-    st.markdown("### Statistical Analysis")
+    st.markdown('<p class="section-header">📈 Statistical Analysis</p>', unsafe_allow_html=True)
     
     if st.session_state.simulation_done:
         simulator = st.session_state.simulator
@@ -478,7 +624,7 @@ with tab3:
         st.info("👈 Run simulation first to see statistical analysis")
 
 with tab4:
-    st.markdown("### Theoretical Background")
+    st.markdown('<p class="section-header">🧮 Theoretical Background</p>', unsafe_allow_html=True)
     
     st.markdown("""
     <div class="theory-box">
@@ -593,13 +739,13 @@ with tab4:
 # Footer
 st.markdown("""
 <div class="footer">
-    <p>🧠 Neural Population Dynamics Simulator | Built with Streamlit</p>
+    <p><strong>🧠 Neural Population Dynamics Simulator</strong></p>
     <p>
-        <a href="https://github.com/your-username/neural-population-dynamics" target="_blank">🔗 GitHub Repository</a> | 
-        <a href="https://your-portfolio.com" target="_blank">🌐 Portfolio</a> |
-        <a href="mailto:your.email@domain.com">📧 Contact</a>
+        <a href="https://github.com/kiranshay/neural-population-dynamics-simulator" target="_blank">GitHub</a> ·
+        <a href="https://kiranshay.github.io" target="_blank">Portfolio</a> ·
+        <a href="mailto:kiranshay123@gmail.com">Contact</a>
     </p>
-    <p><em>Demonstrating advanced Monte Carlo methods in computational neuroscience</em></p>
+    <p style="font-size: 0.85rem; color: #94a3b8;">Monte Carlo methods in computational neuroscience · Built by Kiran Shay</p>
 </div>
 """, unsafe_allow_html=True)
 
