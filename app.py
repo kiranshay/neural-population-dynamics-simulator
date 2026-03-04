@@ -138,15 +138,271 @@ st.markdown("""
         font-weight: 600;
     }
 
-    /* Section Headers */
+    /* Section Headers - Enhanced */
     .section-header {
         font-family: 'Inter', sans-serif;
-        font-size: 1.5rem;
+        font-size: 1.75rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 3px solid;
+        border-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%) 1;
+        display: block;
+    }
+
+    /* Subsection Headers */
+    .subsection-header {
+        font-family: 'Inter', sans-serif;
+        font-size: 1.35rem;
+        font-weight: 600;
+        color: #334155;
+        margin: 2rem 0 1rem 0;
+        padding: 0.75rem 1rem;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border-left: 4px solid #667eea;
+        border-radius: 0 8px 8px 0;
+    }
+
+    /* Expander styling */
+    .streamlit-expanderHeader {
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        font-size: 1.05rem;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border-radius: 10px;
+    }
+
+    /* Content cards inside expanders */
+    .concept-card {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1.25rem;
+        margin: 1rem 0;
+    }
+
+    .concept-card h5 {
+        font-family: 'Inter', sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #334155;
+        margin: 0 0 0.75rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .concept-card p, .concept-card li {
+        color: #475569;
+        line-height: 1.7;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Highlight box */
+    .highlight-box {
+        background: linear-gradient(135deg, #ede9fe 0%, #e0e7ff 100%);
+        border: 1px solid #c7d2fe;
+        border-radius: 10px;
+        padding: 1rem 1.25rem;
+        margin: 1rem 0;
+    }
+
+    .highlight-box p {
+        color: #4338ca;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    /* Key point callout */
+    .key-point {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+        border: 1px solid #6ee7b7;
+        border-radius: 10px;
+        padding: 1rem 1.25rem;
+        margin: 1rem 0;
+    }
+
+    .key-point-icon {
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    .key-point p {
+        color: #065f46;
+        font-weight: 500;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    /* Definition list styling */
+    .def-item {
+        display: flex;
+        margin-bottom: 0.75rem;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .def-term {
+        font-weight: 600;
+        color: #667eea;
+        min-width: 140px;
+        flex-shrink: 0;
+    }
+
+    .def-desc {
+        color: #475569;
+        line-height: 1.5;
+    }
+
+    /* Algorithm steps */
+    .algo-step {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 0.75rem 0;
+        border-bottom: 1px dashed #e2e8f0;
+    }
+
+    .algo-step:last-child {
+        border-bottom: none;
+    }
+
+    .step-num {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-weight: 700;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+    }
+
+    .step-content {
+        color: #334155;
+        line-height: 1.6;
+    }
+
+    .step-content strong {
+        color: #1e293b;
+    }
+
+    /* Parameter cards */
+    .param-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1rem;
+        margin: 1rem 0;
+    }
+
+    .param-card {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 1rem;
+    }
+
+    .param-card h6 {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #667eea;
+        margin: 0 0 0.5rem 0;
+    }
+
+    .param-card p {
+        color: #64748b;
+        font-size: 0.9rem;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    /* State cards for network regimes */
+    .state-card {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border: 2px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 1.25rem;
+        height: 100%;
+        transition: all 0.2s ease;
+    }
+
+    .state-card:hover {
+        border-color: #667eea;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+    }
+
+    .state-card h4 {
+        font-family: 'Inter', sans-serif;
+        font-size: 1.1rem;
         font-weight: 600;
         color: #1e293b;
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid #e2e8f0;
+        margin: 0 0 0.25rem 0;
+    }
+
+    .state-card .state-subtitle {
+        font-style: italic;
+        color: #64748b;
+        font-size: 0.9rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .state-card .params {
+        background: #e0e7ff;
+        border-radius: 8px;
+        padding: 0.75rem;
+        margin: 0.75rem 0;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.8rem;
+        color: #4338ca;
+    }
+
+    .state-card .props {
+        color: #475569;
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    /* Table styling enhancement */
+    .stMarkdown table {
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 1rem 0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .stMarkdown thead th {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-weight: 600;
+        padding: 0.75rem 1rem;
+        text-align: left;
+    }
+
+    .stMarkdown tbody td {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #e2e8f0;
+        color: #334155;
+    }
+
+    .stMarkdown tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .stMarkdown tbody tr:nth-child(even) {
+        background: #f8fafc;
     }
 
     /* Sidebar Styling */
@@ -627,77 +883,169 @@ with tab4:
     st.markdown('<p class="section-header">🧮 Theoretical Background</p>', unsafe_allow_html=True)
 
     # Mathematical Framework Section
-    st.markdown("### Mathematical Framework")
+    st.markdown('<div class="subsection-header">📐 Mathematical Framework</div>', unsafe_allow_html=True)
 
     with st.expander("**1. Gillespie Algorithm (Stochastic Simulation Algorithm)**", expanded=True):
         st.markdown("""
-The **Gillespie algorithm** (1977) provides *exact* stochastic simulation by treating neural spiking as a continuous-time Markov process. Unlike discrete-time methods that approximate dynamics, Gillespie samples the exact timing of events.
-
-**Algorithm Steps:**
-1. **Compute total rate:** Λ(t) = Σᵢ λᵢ(t), where λᵢ is neuron i's instantaneous firing rate
-2. **Sample waiting time:** Δt ~ Exponential(Λ), giving P(Δt > τ) = exp(-Λτ)
-3. **Select firing neuron:** P(neuron i fires) = λᵢ(t) / Λ(t)
-4. **Update state:** Record spike, update refractory states, advance time by Δt
-
-**Why exact?** The exponential waiting time is the *memoryless* property of Poisson processes. Combined with proportional selection, this exactly samples from the underlying continuous-time dynamics without discretization error.
+The **Gillespie algorithm** (1977) provides *exact* stochastic simulation by treating neural spiking as a continuous-time Markov process.
         """)
+
+        st.markdown("""
+<div class="highlight-box">
+<p>💡 Unlike discrete-time methods that approximate dynamics, Gillespie samples the <strong>exact timing</strong> of events with no discretization error.</p>
+</div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("**Algorithm Steps:**")
+        st.markdown("""
+<div class="algo-step">
+    <div class="step-num">1</div>
+    <div class="step-content"><strong>Compute total rate:</strong> Λ(t) = Σᵢ λᵢ(t), where λᵢ is neuron i's instantaneous firing rate</div>
+</div>
+<div class="algo-step">
+    <div class="step-num">2</div>
+    <div class="step-content"><strong>Sample waiting time:</strong> Δt ~ Exponential(Λ), giving P(Δt > τ) = exp(-Λτ)</div>
+</div>
+<div class="algo-step">
+    <div class="step-num">3</div>
+    <div class="step-content"><strong>Select firing neuron:</strong> P(neuron i fires) = λᵢ(t) / Λ(t)</div>
+</div>
+<div class="algo-step">
+    <div class="step-num">4</div>
+    <div class="step-content"><strong>Update state:</strong> Record spike, update refractory states, advance time by Δt</div>
+</div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+<div class="key-point">
+    <div class="key-point-icon">✓</div>
+    <p><strong>Why exact?</strong> The exponential waiting time reflects the <em>memoryless</em> property of Poisson processes. Combined with proportional selection, this exactly samples from the underlying continuous-time dynamics.</p>
+</div>
+        """, unsafe_allow_html=True)
 
     with st.expander("**2. Inhomogeneous Poisson Process with Refractory Period**", expanded=True):
-        st.markdown("""
-Each neuron generates spikes as a **time-varying Poisson process** with rate modulated by multiple factors:
-        """)
-        st.latex(r"\lambda_i(t) = \lambda_0 \cdot S(t) \cdot R(t - t_{last}) \cdot \exp(\sigma \cdot \eta_i(t)) \cdot (1 + \alpha \cdot A(t))")
-        st.markdown("""
-**Where:**
-- **λ₀** = Base firing rate (Hz) — intrinsic excitability
-- **S(t)** = Stimulus gain function — external drive (1 + s during stimulation)
-- **R(Δt)** = Refractory function — Heaviside step H(Δt - τᵣₑf), enforcing absolute refractory period
-- **ηᵢ(t)** = Correlated Gaussian noise — synaptic variability
-- **A(t)** = Recent population activity — recurrent network effects
+        st.markdown("Each neuron generates spikes as a **time-varying Poisson process** with rate modulated by multiple factors:")
 
-**Refractory Period:** After firing, a neuron enters an *absolute refractory period* (τᵣₑf ≈ 1-3 ms) during which it cannot fire again. This arises from Na⁺ channel inactivation and sets the maximum firing rate: f_max = 1/τᵣₑf ≈ 300-1000 Hz.
-        """)
+        st.latex(r"\lambda_i(t) = \lambda_0 \cdot S(t) \cdot R(t - t_{last}) \cdot \exp(\sigma \cdot \eta_i(t)) \cdot (1 + \alpha \cdot A(t))")
+
+        st.markdown("**Parameter Definitions:**")
+        st.markdown("""
+<div class="def-item"><span class="def-term">λ₀</span><span class="def-desc">Base firing rate (Hz) — intrinsic excitability of the neuron</span></div>
+<div class="def-item"><span class="def-term">S(t)</span><span class="def-desc">Stimulus gain function — external drive (1 + s during stimulation)</span></div>
+<div class="def-item"><span class="def-term">R(Δt)</span><span class="def-desc">Refractory function — Heaviside step H(Δt - τᵣₑf), enforcing absolute refractory period</span></div>
+<div class="def-item"><span class="def-term">ηᵢ(t)</span><span class="def-desc">Correlated Gaussian noise — synaptic variability</span></div>
+<div class="def-item"><span class="def-term">A(t)</span><span class="def-desc">Recent population activity — recurrent network effects</span></div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+<div class="concept-card">
+    <h5>⏱️ Refractory Period</h5>
+    <p>After firing, a neuron enters an <strong>absolute refractory period</strong> (τᵣₑf ≈ 1-3 ms) during which it cannot fire again. This arises from Na⁺ channel inactivation.</p>
+    <p><strong>Maximum firing rate:</strong> f_max = 1/τᵣₑf ≈ 300-1000 Hz</p>
+</div>
+        """, unsafe_allow_html=True)
 
     with st.expander("**3. Correlated Noise via Cholesky Decomposition**", expanded=True):
-        st.markdown("""
-Real neural populations exhibit **correlated variability** — neurons don't fluctuate independently. We model this with multivariate Gaussian noise:
-        """)
-        st.latex(r"\vec{\eta} = L \cdot \vec{z}, \quad \text{where } \vec{z} \sim \mathcal{N}(0, I) \text{ and } C = LL^T")
-        st.markdown("""
-**Correlation Structure:**
-- **Correlation matrix:** Cᵢⱼ = ρ for i ≠ j, and Cᵢᵢ = 1
-- **Cholesky factor:** L = chol(C) — lower triangular matrix
-- **Result:** E[ηᵢηⱼ] = ρ for all neuron pairs
+        st.markdown("Real neural populations exhibit **correlated variability** — neurons don't fluctuate independently. We model this with multivariate Gaussian noise:")
 
-**Biological origin:** Correlated fluctuations arise from shared synaptic input, common neuromodulatory signals, and recurrent connectivity. Correlation magnitude (ρ ≈ 0.1-0.3 in cortex) reflects functional coupling strength.
-        """)
+        st.latex(r"\vec{\eta} = L \cdot \vec{z}, \quad \text{where } \vec{z} \sim \mathcal{N}(0, I) \text{ and } C = LL^T")
+
+        st.markdown("**Correlation Structure:**")
+        st.markdown("""
+<div class="param-grid">
+    <div class="param-card">
+        <h6>Correlation Matrix</h6>
+        <p>Cᵢⱼ = ρ for i ≠ j, and Cᵢᵢ = 1</p>
+    </div>
+    <div class="param-card">
+        <h6>Cholesky Factor</h6>
+        <p>L = chol(C) — lower triangular matrix</p>
+    </div>
+    <div class="param-card">
+        <h6>Result</h6>
+        <p>E[ηᵢηⱼ] = ρ for all neuron pairs</p>
+    </div>
+</div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+<div class="concept-card">
+    <h5>🧬 Biological Origin</h5>
+    <p>Correlated fluctuations arise from:</p>
+    <ul>
+        <li>Shared synaptic input from common presynaptic sources</li>
+        <li>Common neuromodulatory signals (dopamine, acetylcholine)</li>
+        <li>Recurrent connectivity within the network</li>
+    </ul>
+    <p><strong>Typical values:</strong> ρ ≈ 0.1-0.3 in cortex, reflecting functional coupling strength</p>
+</div>
+        """, unsafe_allow_html=True)
 
     with st.expander("**4. Mean-Field Approximation**", expanded=True):
-        st.markdown("""
-For large populations (N → ∞), individual spike trains average out, and the **population rate** becomes deterministic:
-        """)
+        st.markdown("For large populations (N → ∞), individual spike trains average out, and the **population rate** becomes deterministic:")
+
         st.latex(r"r(t) = \frac{1}{N} \sum_i \lambda_i(t) \rightarrow \mathbb{E}[\lambda(t)] \text{ as } N \rightarrow \infty")
+
         st.markdown("""
-The mean-field rate provides a baseline prediction. Deviations from mean-field arise from:
-- **Finite-size fluctuations:** σᵣ ∝ 1/√N — smaller populations are noisier
-- **Correlated noise:** Shared variability doesn't average out
-- **Network interactions:** Feedback creates non-linear dynamics
-        """)
+<div class="highlight-box">
+<p>📊 The mean-field rate provides a baseline prediction that can be compared against stochastic simulations.</p>
+</div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("**Deviations from mean-field arise from:**")
+        st.markdown("""
+<div class="param-grid">
+    <div class="param-card">
+        <h6>Finite-Size Fluctuations</h6>
+        <p>σᵣ ∝ 1/√N — smaller populations are noisier</p>
+    </div>
+    <div class="param-card">
+        <h6>Correlated Noise</h6>
+        <p>Shared variability doesn't average out across neurons</p>
+    </div>
+    <div class="param-card">
+        <h6>Network Interactions</h6>
+        <p>Feedback creates non-linear dynamics beyond mean-field</p>
+    </div>
+</div>
+        """, unsafe_allow_html=True)
 
     # Biological Relevance Section
-    st.markdown("### Biological Relevance")
+    st.markdown('<div class="subsection-header">🧠 Biological Relevance</div>', unsafe_allow_html=True)
 
-    with st.expander("**🧠 Neural Population Coding**", expanded=True):
+    with st.expander("**Neural Population Coding**", expanded=True):
         st.markdown("""
-**Why populations?** The brain doesn't rely on single neurons. Populations of 100-10,000+ neurons work together to:
-- **Average out noise:** Individual neurons are unreliable (CV ≈ 1), but populations achieve precision through averaging
-- **Multiplex information:** Different aspects encoded in rate, timing, and correlations
-- **Enable robust computation:** Graceful degradation if individual neurons fail
+<div class="highlight-box">
+<p>🧠 <strong>Why populations?</strong> The brain doesn't rely on single neurons. Populations of 100-10,000+ neurons work together for reliable computation.</p>
+</div>
+        """, unsafe_allow_html=True)
 
-**Population rate coding:** The simplest code — stimulus intensity maps to mean firing rate. Our simulator shows this: stronger stimuli → higher population rate during the stimulus window.
-        """)
+        st.markdown("**Key advantages of population coding:**")
+        st.markdown("""
+<div class="param-grid">
+    <div class="param-card">
+        <h6>🎯 Noise Averaging</h6>
+        <p>Individual neurons are unreliable (CV ≈ 1), but populations achieve precision through averaging</p>
+    </div>
+    <div class="param-card">
+        <h6>📡 Information Multiplexing</h6>
+        <p>Different aspects encoded in rate, timing, and correlations simultaneously</p>
+    </div>
+    <div class="param-card">
+        <h6>🛡️ Robust Computation</h6>
+        <p>Graceful degradation if individual neurons fail or become noisy</p>
+    </div>
+</div>
+        """, unsafe_allow_html=True)
 
-    with st.expander("**🔬 Experimental Techniques This Simulates**", expanded=True):
+        st.markdown("""
+<div class="concept-card">
+    <h5>📈 Population Rate Coding</h5>
+    <p>The simplest neural code — stimulus intensity maps to mean firing rate. This simulator demonstrates this principle: <strong>stronger stimuli → higher population rate</strong> during the stimulus window.</p>
+</div>
+        """, unsafe_allow_html=True)
+
+    with st.expander("**Experimental Techniques This Simulates**", expanded=True):
         st.markdown("""
 | Technique | What It Measures | Simulator Analog |
 |-----------|------------------|------------------|
@@ -707,103 +1055,131 @@ The mean-field rate provides a baseline prediction. Deviations from mean-field a
 | **Neuropixels probes** | 1000s of neurons simultaneously | Correlation matrices, population statistics |
         """)
 
-    with st.expander("**🏥 Clinical Relevance**", expanded=True):
+    with st.expander("**Clinical Relevance**", expanded=True):
+        st.markdown("Understanding population dynamics informs treatment of neurological disorders:")
+
         st.markdown("""
-Understanding population dynamics informs treatment of neurological disorders:
-- **Epilepsy:** Pathological hypersynchrony — too much correlation, runaway excitation. Compare "Highly Excitable" regime.
-- **Parkinson's disease:** Abnormal beta oscillations (13-30 Hz) in basal ganglia. Our spectral analysis detects such rhythms.
-- **Schizophrenia:** Disrupted gamma synchrony during working memory. Correlation structure matters for cognition.
-- **Anesthesia:** Loss of consciousness correlates with breakdown of complex dynamics → more regular, correlated activity.
-        """)
+<div class="param-grid">
+    <div class="param-card">
+        <h6>⚡ Epilepsy</h6>
+        <p>Pathological hypersynchrony — too much correlation, runaway excitation. Compare "Highly Excitable" regime.</p>
+    </div>
+    <div class="param-card">
+        <h6>🧠 Parkinson's Disease</h6>
+        <p>Abnormal beta oscillations (13-30 Hz) in basal ganglia. Our spectral analysis detects such rhythms.</p>
+    </div>
+    <div class="param-card">
+        <h6>🔮 Schizophrenia</h6>
+        <p>Disrupted gamma synchrony during working memory. Correlation structure matters for cognition.</p>
+    </div>
+    <div class="param-card">
+        <h6>💤 Anesthesia</h6>
+        <p>Loss of consciousness correlates with breakdown of complex dynamics → more regular, correlated activity.</p>
+    </div>
+</div>
+        """, unsafe_allow_html=True)
 
     # Parameter Guide
-    st.markdown("### Parameter Effects Guide")
+    st.markdown('<div class="subsection-header">🎛️ Parameter Effects Guide</div>', unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
 
     with col1:
         st.markdown("""
-        **🔥 Firing Rate Parameters:**
-        - **Base Rate (λ₀)**: Spontaneous activity level. Cortical neurons: 1-20 Hz. Higher = more spikes.
-        - **Refractory Period (τᵣₑf)**: Sets max rate = 1/τᵣₑf. 2ms → 500 Hz max.
-        - **Stimulus Strength**: Multiplicative gain. 1.0 = 2x rate during stimulus.
+<div class="concept-card">
+    <h5>🔥 Firing Rate Parameters</h5>
+    <div class="def-item"><span class="def-term">Base Rate (λ₀)</span><span class="def-desc">Spontaneous activity. Cortical neurons: 1-20 Hz</span></div>
+    <div class="def-item"><span class="def-term">Refractory (τᵣₑf)</span><span class="def-desc">Sets max rate = 1/τᵣₑf. 2ms → 500 Hz max</span></div>
+    <div class="def-item"><span class="def-term">Stimulus Strength</span><span class="def-desc">Multiplicative gain. 1.0 = 2× rate during stimulus</span></div>
+</div>
+        """, unsafe_allow_html=True)
 
-        **🌊 Noise & Correlation:**
-        - **Synaptic Noise (σ)**: Log-normal rate modulation. Higher = more trial-to-trial variability.
-        - **Population Correlation (ρ)**: Shared fluctuations. Cortex: ρ ≈ 0.1-0.3.
-        - **Connectivity (α)**: Recurrent feedback strength. Enables oscillations.
-        """)
+        st.markdown("""
+<div class="concept-card">
+    <h5>🌊 Noise & Correlation</h5>
+    <div class="def-item"><span class="def-term">Synaptic Noise (σ)</span><span class="def-desc">Log-normal rate modulation. Higher = more variability</span></div>
+    <div class="def-item"><span class="def-term">Correlation (ρ)</span><span class="def-desc">Shared fluctuations. Cortex: ρ ≈ 0.1-0.3</span></div>
+    <div class="def-item"><span class="def-term">Connectivity (α)</span><span class="def-desc">Recurrent feedback strength. Enables oscillations</span></div>
+</div>
+        """, unsafe_allow_html=True)
 
     with col2:
         st.markdown("""
-        **📊 What to Observe:**
-        - **Population Rate**: Should track stimulus. Look for latency and adaptation.
-        - **Raster Plot**: Vertical stripes = synchrony. Scattered = asynchronous.
-        - **ISI Distribution**: Exponential = Poisson. Peak at τᵣₑf = rate-limited.
-        - **Correlations**: Diagonal-heavy = independent. Off-diagonal = coupled.
-        - **Power Spectrum**: Peaks = oscillations. 1/f slope = scale-free dynamics.
+<div class="concept-card">
+    <h5>📊 What to Observe</h5>
+    <div class="def-item"><span class="def-term">Population Rate</span><span class="def-desc">Should track stimulus. Look for latency and adaptation</span></div>
+    <div class="def-item"><span class="def-term">Raster Plot</span><span class="def-desc">Vertical stripes = synchrony. Scattered = async</span></div>
+    <div class="def-item"><span class="def-term">ISI Distribution</span><span class="def-desc">Exponential = Poisson. Peak at τᵣₑf = rate-limited</span></div>
+    <div class="def-item"><span class="def-term">Correlations</span><span class="def-desc">Diagonal = independent. Off-diagonal = coupled</span></div>
+    <div class="def-item"><span class="def-term">Power Spectrum</span><span class="def-desc">Peaks = oscillations. 1/f = scale-free</span></div>
+</div>
+        """, unsafe_allow_html=True)
 
-        **🎯 Try These Experiments:**
-        - Increase correlation → watch vertical stripes emerge in raster
-        - Increase connectivity → observe oscillations in power spectrum
-        - Lower refractory → allow higher peak rates
-        """)
+        st.markdown("""
+<div class="key-point">
+    <div class="key-point-icon">🎯</div>
+    <p><strong>Try:</strong> Increase correlation → vertical stripes in raster. Increase connectivity → oscillations in spectrum.</p>
+</div>
+        """, unsafe_allow_html=True)
 
     # Parameter Regimes
-    st.markdown("### Canonical Network States")
+    st.markdown('<div class="subsection-header">🌐 Canonical Network States</div>', unsafe_allow_html=True)
 
     regime_col1, regime_col2, regime_col3 = st.columns(3)
 
     with regime_col1:
         st.markdown("""
-        **🧘 Asynchronous Irregular (AI)**
-
-        *The "awake cortex" state*
-
-        - Correlation: < 0.2
-        - Noise: > 0.5
-        - Connectivity: < 0.1
-
-        **Properties:**
-        - CV(ISI) ≈ 1 (Poisson-like)
-        - Low pairwise correlations
-        - Flat power spectrum
-        - Most information capacity
-        """)
+<div class="state-card">
+    <h4>🧘 Asynchronous Irregular</h4>
+    <div class="state-subtitle">The "awake cortex" state</div>
+    <div class="params">
+        ρ &lt; 0.2 · σ &gt; 0.5 · α &lt; 0.1
+    </div>
+    <div class="props">
+        <strong>Properties:</strong><br>
+        • CV(ISI) ≈ 1 (Poisson-like)<br>
+        • Low pairwise correlations<br>
+        • Flat power spectrum<br>
+        • Maximum information capacity
+    </div>
+</div>
+        """, unsafe_allow_html=True)
 
     with regime_col2:
         st.markdown("""
-        **🌊 Synchronous Oscillatory**
-
-        *Gamma rhythms, attention*
-
-        - Correlation: > 0.5
-        - Noise: 0.2-0.4
-        - Connectivity: > 0.15
-
-        **Properties:**
-        - Periodic population bursts
-        - Clear spectral peak
-        - Coordinated processing
-        - Feature binding
-        """)
+<div class="state-card">
+    <h4>🌊 Synchronous Oscillatory</h4>
+    <div class="state-subtitle">Gamma rhythms, attention</div>
+    <div class="params">
+        ρ &gt; 0.5 · σ = 0.2-0.4 · α &gt; 0.15
+    </div>
+    <div class="props">
+        <strong>Properties:</strong><br>
+        • Periodic population bursts<br>
+        • Clear spectral peak<br>
+        • Coordinated processing<br>
+        • Feature binding
+    </div>
+</div>
+        """, unsafe_allow_html=True)
 
     with regime_col3:
         st.markdown("""
-        **⚡ Highly Synchronous**
-
-        *Seizure-like, pathological*
-
-        - Correlation: > 0.8
-        - Rate: > 30 Hz
-        - Connectivity: > 0.3
-
-        **Properties:**
-        - Massive synchrony
-        - Runaway excitation
-        - Lost information coding
-        - Clinical: epileptiform
-        """)
+<div class="state-card">
+    <h4>⚡ Highly Synchronous</h4>
+    <div class="state-subtitle">Seizure-like, pathological</div>
+    <div class="params">
+        ρ &gt; 0.8 · λ₀ &gt; 30 Hz · α &gt; 0.3
+    </div>
+    <div class="props">
+        <strong>Properties:</strong><br>
+        • Massive synchrony<br>
+        • Runaway excitation<br>
+        • Lost information coding<br>
+        • Clinical: epileptiform
+    </div>
+</div>
+        """, unsafe_allow_html=True)
 
 # Footer
 st.markdown("""
