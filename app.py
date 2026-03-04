@@ -176,6 +176,21 @@ st.markdown("""
         border-radius: 10px;
     }
 
+    /* Ensure all text inside expanders is readable */
+    [data-testid="stExpander"] p,
+    [data-testid="stExpander"] li,
+    [data-testid="stExpander"] span {
+        color: #1e293b !important;
+    }
+
+    [data-testid="stExpander"] strong {
+        color: #0f172a !important;
+    }
+
+    [data-testid="stExpander"] em {
+        color: #334155 !important;
+    }
+
     /* Content cards inside expanders */
     .concept-card {
         background: #f8fafc;
@@ -197,7 +212,7 @@ st.markdown("""
     }
 
     .concept-card p, .concept-card li {
-        color: #475569;
+        color: #1e293b;
         line-height: 1.7;
         margin-bottom: 0.5rem;
     }
@@ -257,7 +272,7 @@ st.markdown("""
     }
 
     .def-desc {
-        color: #475569;
+        color: #1e293b;
         line-height: 1.5;
     }
 
@@ -289,12 +304,12 @@ st.markdown("""
     }
 
     .step-content {
-        color: #334155;
+        color: #1e293b;
         line-height: 1.6;
     }
 
     .step-content strong {
-        color: #1e293b;
+        color: #0f172a;
     }
 
     /* Parameter cards */
@@ -321,7 +336,7 @@ st.markdown("""
     }
 
     .param-card p {
-        color: #64748b;
+        color: #334155;
         font-size: 0.9rem;
         margin: 0;
         line-height: 1.5;
@@ -352,7 +367,7 @@ st.markdown("""
 
     .state-card .state-subtitle {
         font-style: italic;
-        color: #64748b;
+        color: #475569;
         font-size: 0.9rem;
         margin-bottom: 0.75rem;
     }
@@ -364,11 +379,11 @@ st.markdown("""
         margin: 0.75rem 0;
         font-family: 'JetBrains Mono', monospace;
         font-size: 0.8rem;
-        color: #4338ca;
+        color: #3730a3;
     }
 
     .state-card .props {
-        color: #475569;
+        color: #1e293b;
         font-size: 0.9rem;
         line-height: 1.6;
     }
@@ -394,7 +409,7 @@ st.markdown("""
     .stMarkdown tbody td {
         padding: 0.75rem 1rem;
         border-bottom: 1px solid #e2e8f0;
-        color: #334155;
+        color: #1e293b;
     }
 
     .stMarkdown tbody tr:last-child td {
