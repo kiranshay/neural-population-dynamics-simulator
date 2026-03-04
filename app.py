@@ -625,115 +625,244 @@ with tab3:
 
 with tab4:
     st.markdown('<p class="section-header">🧮 Theoretical Background</p>', unsafe_allow_html=True)
-    
+
+    # Mathematical Framework Section
+    st.markdown("### Mathematical Framework")
+
     st.markdown("""
     <div class="theory-box">
-    <h4>🧮 Mathematical Framework</h4>
-    
-    This simulator implements several key concepts from computational neuroscience:
-    
-    <h5>1. Gillespie Algorithm for Exact Stochastic Simulation</h5>
-    The Gillespie algorithm provides exact stochastic simulation of reaction systems. For neural networks:
-    
-    - **Rate calculation**: λᵢ(t) = λ₀ᵢ × g(stimulus) × h(refractory) × noise
-    - **Time step**: Δt ~ Exponential(Σλᵢ)
-    - **Event selection**: P(neuron i fires) = λᵢ/Σλⱼ
-    
-    <h5>2. Poisson Process with Refractory Period</h5>
-    Each neuron follows a modified Poisson process:
-    
-    - **Base rate**: λ₀ (spikes/sec)
-    - **Refractory**: No spikes for τᵣₑf after each spike
-    - **Effective rate**: λₑff(t) = λ₀ × [1 - H(τᵣₑf - (t - tₗₐₛₜ))]
-    
-    <h5>3. Correlated Noise Injection</h5>
-    Population correlations via multivariate noise:
-    
-    - **Correlation matrix**: C = ρ×𝟙 + (1-ρ)×I
-    - **Correlated noise**: 𝒏 = L×𝒛, where L=Chol(C), 𝒛~N(0,I)
-    - **Rate modulation**: λᵢ(t) × exp(σ×nᵢ(t))
+    <h4>1. Gillespie Algorithm (Stochastic Simulation Algorithm)</h4>
+
+    <p>The <strong>Gillespie algorithm</strong> (1977) provides <em>exact</em> stochastic simulation by treating neural spiking as a continuous-time Markov process. Unlike discrete-time methods that approximate dynamics, Gillespie samples the exact timing of events.</p>
+
+    <p><strong>Algorithm Steps:</strong></p>
+    <ol>
+        <li><strong>Compute total rate:</strong> Λ(t) = Σᵢ λᵢ(t), where λᵢ is neuron i's instantaneous firing rate</li>
+        <li><strong>Sample waiting time:</strong> Δt ~ Exponential(Λ), giving P(Δt > τ) = exp(-Λτ)</li>
+        <li><strong>Select firing neuron:</strong> P(neuron i fires) = λᵢ(t) / Λ(t)</li>
+        <li><strong>Update state:</strong> Record spike, update refractory states, advance time by Δt</li>
+    </ol>
+
+    <p><strong>Why exact?</strong> The exponential waiting time is the <em>memoryless</em> property of Poisson processes. Combined with proportional selection, this exactly samples from the underlying continuous-time dynamics without discretization error.</p>
     </div>
     """, unsafe_allow_html=True)
-    
+
     st.markdown("""
     <div class="theory-box">
-    <h4>🔬 Biological Relevance</h4>
-    
-    <h5>Neural Population Dynamics</h5>
-    - **Spontaneous activity**: Baseline firing represents ongoing cortical computation
-    - **Stimulus response**: External input drives coordinated population response  
-    - **Network effects**: Recurrent connections create feedback and oscillations
-    - **Variability**: Synaptic noise and ion channel stochasticity create trial-to-trial variability
-    
-    <h5>Experimental Parallels</h5>
-    - **Calcium imaging**: Population rate ≈ bulk fluorescence signal
-    - **Local field potential**: Spectral content reflects network oscillations
-    - **Spike correlations**: Measure of functional connectivity
+    <h4>2. Inhomogeneous Poisson Process with Refractory Period</h4>
+
+    <p>Each neuron generates spikes as a <strong>time-varying Poisson process</strong> with rate modulated by multiple factors:</p>
+
+    <p style="text-align: center; font-family: 'Times New Roman', serif; font-size: 1.1rem; margin: 1rem 0;">
+        λᵢ(t) = λ₀ · S(t) · R(t - tₗₐₛₜ) · exp(σ · ηᵢ(t)) · (1 + α · A(t))
+    </p>
+
+    <p><strong>Where:</strong></p>
+    <ul>
+        <li><strong>λ₀</strong> = Base firing rate (Hz) — intrinsic excitability</li>
+        <li><strong>S(t)</strong> = Stimulus gain function — external drive (1 + s during stimulation)</li>
+        <li><strong>R(Δt)</strong> = Refractory function — Heaviside step H(Δt - τᵣₑf), enforcing absolute refractory period</li>
+        <li><strong>ηᵢ(t)</strong> = Correlated Gaussian noise — synaptic variability</li>
+        <li><strong>A(t)</strong> = Recent population activity — recurrent network effects</li>
+    </ul>
+
+    <p><strong>Refractory Period:</strong> After firing, a neuron enters an <em>absolute refractory period</em> (τᵣₑf ≈ 1-3 ms) during which it cannot fire again. This arises from Na⁺ channel inactivation and sets the maximum firing rate: fₘₐₓ = 1/τᵣₑf ≈ 300-1000 Hz.</p>
     </div>
     """, unsafe_allow_html=True)
-    
-    # Interactive parameter effects
-    st.markdown("### 🎛️ Parameter Effects Guide")
-    
+
+    st.markdown("""
+    <div class="theory-box">
+    <h4>3. Correlated Noise via Cholesky Decomposition</h4>
+
+    <p>Real neural populations exhibit <strong>correlated variability</strong> — neurons don't fluctuate independently. We model this with multivariate Gaussian noise:</p>
+
+    <p style="text-align: center; font-family: 'Times New Roman', serif; font-size: 1.1rem; margin: 1rem 0;">
+        η⃗ = L · z⃗, where z⃗ ~ N(0, I) and C = LLᵀ
+    </p>
+
+    <p><strong>Correlation Structure:</strong></p>
+    <ul>
+        <li><strong>Correlation matrix:</strong> Cᵢⱼ = ρ for i ≠ j, and Cᵢᵢ = 1</li>
+        <li><strong>Cholesky factor:</strong> L = chol(C) — lower triangular matrix</li>
+        <li><strong>Result:</strong> E[ηᵢηⱼ] = ρ for all neuron pairs</li>
+    </ul>
+
+    <p><strong>Biological origin:</strong> Correlated fluctuations arise from shared synaptic input, common neuromodulatory signals, and recurrent connectivity. Correlation magnitude (ρ ≈ 0.1-0.3 in cortex) reflects functional coupling strength.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="theory-box">
+    <h4>4. Mean-Field Approximation</h4>
+
+    <p>For large populations (N → ∞), individual spike trains average out, and the <strong>population rate</strong> becomes deterministic:</p>
+
+    <p style="text-align: center; font-family: 'Times New Roman', serif; font-size: 1.1rem; margin: 1rem 0;">
+        r(t) = (1/N) Σᵢ λᵢ(t) → E[λ(t)] as N → ∞
+    </p>
+
+    <p>The mean-field rate provides a baseline prediction. Deviations from mean-field arise from:</p>
+    <ul>
+        <li><strong>Finite-size fluctuations:</strong> σᵣ ∝ 1/√N — smaller populations are noisier</li>
+        <li><strong>Correlated noise:</strong> Shared variability doesn't average out</li>
+        <li><strong>Network interactions:</strong> Feedback creates non-linear dynamics</li>
+    </ul>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Biological Relevance Section
+    st.markdown("### Biological Relevance")
+
+    st.markdown("""
+    <div class="theory-box">
+    <h4>🧠 Neural Population Coding</h4>
+
+    <p><strong>Why populations?</strong> The brain doesn't rely on single neurons. Populations of 100-10,000+ neurons work together to:</p>
+    <ul>
+        <li><strong>Average out noise:</strong> Individual neurons are unreliable (CV ≈ 1), but populations achieve precision through averaging</li>
+        <li><strong>Multiplex information:</strong> Different aspects encoded in rate, timing, and correlations</li>
+        <li><strong>Enable robust computation:</strong> Graceful degradation if individual neurons fail</li>
+    </ul>
+
+    <p><strong>Population rate coding:</strong> The simplest code — stimulus intensity maps to mean firing rate. Our simulator shows this: stronger stimuli → higher population rate during the stimulus window.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="theory-box">
+    <h4>🔬 Experimental Techniques This Simulates</h4>
+
+    <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+        <tr style="border-bottom: 2px solid #e2e8f0;">
+            <th style="text-align: left; padding: 8px; color: #334155;">Technique</th>
+            <th style="text-align: left; padding: 8px; color: #334155;">What It Measures</th>
+            <th style="text-align: left; padding: 8px; color: #334155;">Simulator Analog</th>
+        </tr>
+        <tr style="border-bottom: 1px solid #e2e8f0;">
+            <td style="padding: 8px;"><strong>Multi-electrode arrays</strong></td>
+            <td style="padding: 8px;">Spike times from ~100 neurons</td>
+            <td style="padding: 8px;">Raster plot, ISI distribution</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #e2e8f0;">
+            <td style="padding: 8px;"><strong>Calcium imaging</strong></td>
+            <td style="padding: 8px;">Bulk fluorescence ∝ population activity</td>
+            <td style="padding: 8px;">Population rate time series</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #e2e8f0;">
+            <td style="padding: 8px;"><strong>Local field potential (LFP)</strong></td>
+            <td style="padding: 8px;">Summed synaptic currents</td>
+            <td style="padding: 8px;">Power spectrum analysis</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px;"><strong>Neuropixels probes</strong></td>
+            <td style="padding: 8px;">1000s of neurons simultaneously</td>
+            <td style="padding: 8px;">Correlation matrices, population statistics</td>
+        </tr>
+    </table>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="theory-box">
+    <h4>🏥 Clinical Relevance</h4>
+
+    <p>Understanding population dynamics informs treatment of neurological disorders:</p>
+    <ul>
+        <li><strong>Epilepsy:</strong> Pathological hypersynchrony — too much correlation, runaway excitation. Compare "Highly Excitable" regime.</li>
+        <li><strong>Parkinson's disease:</strong> Abnormal beta oscillations (13-30 Hz) in basal ganglia. Our spectral analysis detects such rhythms.</li>
+        <li><strong>Schizophrenia:</strong> Disrupted gamma synchrony during working memory. Correlation structure matters for cognition.</li>
+        <li><strong>Anesthesia:</strong> Loss of consciousness correlates with breakdown of complex dynamics → more regular, correlated activity.</li>
+    </ul>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Parameter Guide
+    st.markdown("### Parameter Effects Guide")
+
     col1, col2 = st.columns(2)
-    
+
     with col1:
         st.markdown("""
         **🔥 Firing Rate Parameters:**
-        - **Base Rate**: Sets spontaneous activity level
-        - **Stimulus Strength**: Multiplicative gain during stimulation
-        - **Refractory Period**: Limits maximum firing rate
-        
+        - **Base Rate (λ₀)**: Spontaneous activity level. Cortical neurons: 1-20 Hz. Higher = more spikes.
+        - **Refractory Period (τᵣₑf)**: Sets max rate = 1/τᵣₑf. 2ms → 500 Hz max.
+        - **Stimulus Strength**: Multiplicative gain. 1.0 = 2x rate during stimulus.
+
         **🌊 Noise & Correlation:**
-        - **Synaptic Noise**: Increases rate variability
-        - **Population Correlation**: Synchronizes neural activity
-        - **Network Connectivity**: Creates feedback effects
+        - **Synaptic Noise (σ)**: Log-normal rate modulation. Higher = more trial-to-trial variability.
+        - **Population Correlation (ρ)**: Shared fluctuations. Cortex: ρ ≈ 0.1-0.3.
+        - **Connectivity (α)**: Recurrent feedback strength. Enables oscillations.
         """)
-    
+
     with col2:
         st.markdown("""
-        **📊 Observables:**
-        - **Population Rate**: Mean network activity
-        - **Rate Variability**: CV of population dynamics
-        - **Spike Correlations**: Pairwise neural coupling
-        - **Power Spectrum**: Network oscillation frequencies
-        
-        **🎯 Biological Interpretation:**
-        - High correlation → Synchronized states
-        - Low noise → Regular, predictable activity  
-        - Strong connectivity → Emergent oscillations
+        **📊 What to Observe:**
+        - **Population Rate**: Should track stimulus. Look for latency and adaptation.
+        - **Raster Plot**: Vertical stripes = synchrony. Scattered = asynchronous.
+        - **ISI Distribution**: Exponential = Poisson. Peak at τᵣₑf = rate-limited.
+        - **Correlations**: Diagonal-heavy = independent. Off-diagonal = coupled.
+        - **Power Spectrum**: Peaks = oscillations. 1/f slope = scale-free dynamics.
+
+        **🎯 Try These Experiments:**
+        - Increase correlation → watch vertical stripes emerge in raster
+        - Increase connectivity → observe oscillations in power spectrum
+        - Lower refractory → allow higher peak rates
         """)
-    
-    # Show example parameter regimes
-    st.markdown("### 📈 Example Parameter Regimes")
-    
+
+    # Parameter Regimes
+    st.markdown("### Canonical Network States")
+
     regime_col1, regime_col2, regime_col3 = st.columns(3)
-    
+
     with regime_col1:
         st.markdown("""
-        **🧘 Asynchronous Irregular**
-        - Low correlation (< 0.2)
-        - High noise (> 0.8)
-        - Weak connectivity (< 0.1)
-        - *→ Realistic cortical state*
+        **🧘 Asynchronous Irregular (AI)**
+
+        *The "awake cortex" state*
+
+        - Correlation: < 0.2
+        - Noise: > 0.5
+        - Connectivity: < 0.1
+
+        **Properties:**
+        - CV(ISI) ≈ 1 (Poisson-like)
+        - Low pairwise correlations
+        - Flat power spectrum
+        - Most information capacity
         """)
-    
+
     with regime_col2:
         st.markdown("""
-        **🌊 Synchronized Oscillations**
-        - High correlation (> 0.6)
-        - Moderate noise (~0.3)
-        - Strong connectivity (> 0.2)
-        - *→ Gamma/beta rhythms*
+        **🌊 Synchronous Oscillatory**
+
+        *Gamma rhythms, attention*
+
+        - Correlation: > 0.5
+        - Noise: 0.2-0.4
+        - Connectivity: > 0.15
+
+        **Properties:**
+        - Periodic population bursts
+        - Clear spectral peak
+        - Coordinated processing
+        - Feature binding
         """)
-    
+
     with regime_col3:
         st.markdown("""
-        **⚡ Highly Excitable**
-        - High base rate (> 30 Hz)
-        - Low refractory (< 2 ms)
-        - High stimulus gain (> 2.0)
-        - *→ Seizure-like activity*
+        **⚡ Highly Synchronous**
+
+        *Seizure-like, pathological*
+
+        - Correlation: > 0.8
+        - Rate: > 30 Hz
+        - Connectivity: > 0.3
+
+        **Properties:**
+        - Massive synchrony
+        - Runaway excitation
+        - Lost information coding
+        - Clinical: epileptiform
         """)
 
 # Footer
