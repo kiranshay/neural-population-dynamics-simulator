@@ -10,7 +10,7 @@ st.set_page_config(
     page_title="Neural Population Dynamics Simulator",
     page_icon="🧠",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
 # Custom CSS for professional styling
@@ -468,27 +468,57 @@ st.markdown("""
         color: #764ba2;
     }
 
+    /* Make plots responsive */
+    .stPlotlyChart, [data-testid="stImage"], .stPyplot > div {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
     /* Mobile Responsive */
     @media (max-width: 768px) {
+        .main .block-container {
+            padding-top: 1rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
         .main-header {
-            font-size: 1.75rem;
+            font-size: 1.5rem;
+            line-height: 1.3;
         }
 
         .subtitle {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
         }
 
         .metric-container {
             padding: 0.75rem;
             border-radius: 12px;
+            margin-bottom: 0.5rem;
         }
 
         .metric-container h3 {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
+        }
+
+        .metric-container p {
+            font-size: 0.75rem;
         }
 
         .section-header {
-            font-size: 1.35rem;
+            font-size: 1.2rem;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .highlight-box {
+            padding: 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        .highlight-box p {
+            font-size: 0.85rem;
         }
 
         .param-grid {
@@ -508,9 +538,35 @@ st.markdown("""
             gap: 0.5rem;
         }
 
+        .stTabs [data-baseweb="tab-list"] {
+            padding: 4px;
+            gap: 4px;
+        }
+
         .stTabs [data-baseweb="tab"] {
-            height: 40px;
-            padding: 0 12px;
+            height: 36px;
+            padding: 0 10px;
+            font-size: 0.75rem;
+        }
+
+        .concept-card {
+            padding: 0.75rem;
+        }
+
+        .state-card {
+            padding: 0.75rem;
+        }
+
+        .subsection-header {
+            font-size: 1.1rem;
+            padding: 0.5rem 0.75rem;
+        }
+
+        .footer {
+            padding: 1rem;
+        }
+
+        .footer p {
             font-size: 0.8rem;
         }
     }
@@ -539,6 +595,14 @@ st.markdown("""
 st.markdown('<div class="main-header">🧠 Neural Population Dynamics Simulator</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Monte Carlo Simulation of Stochastic Neural Networks</div>', unsafe_allow_html=True)
 
+# Mobile hint — sidebar is collapsed by default
+st.markdown("""
+<div class="highlight-box" style="margin-bottom: 1rem;">
+<p>👈 <strong>Getting started:</strong> Open the sidebar (arrow at top-left or swipe right on mobile)
+to configure simulation parameters, then click <strong>Run Simulation</strong>.</p>
+</div>
+""", unsafe_allow_html=True)
+
 # Sidebar controls
 st.sidebar.markdown("## 🎛️ Simulation Parameters")
 
@@ -546,23 +610,61 @@ st.sidebar.markdown("## 🎛️ Simulation Parameters")
 st.sidebar.markdown("### Population Settings")
 N_neurons = st.sidebar.slider("Number of Neurons", 50, 500, 200, 50)
 simulation_time = st.sidebar.slider("Simulation Time (ms)", 100, 2000, 1000, 100)
+with st.sidebar.expander("ℹ️ What are these?"):
+    st.markdown("""
+    **Number of Neurons** — How many neurons are in the simulated population.
+    Real cortical columns contain ~10,000 neurons; we simulate a subset for speed.
+
+    **Simulation Time** — How long to record activity (in milliseconds).
+    1000ms = 1 second of neural activity. Typical experiments record 1-10 seconds.
+    """)
 
 # Neural parameters
 st.sidebar.markdown("### Neural Properties")
 base_firing_rate = st.sidebar.slider("Base Firing Rate (Hz)", 1.0, 50.0, 10.0, 1.0)
 refractory_period = st.sidebar.slider("Refractory Period (ms)", 1.0, 5.0, 2.0, 0.5)
 noise_strength = st.sidebar.slider("Synaptic Noise", 0.0, 2.0, 0.5, 0.1)
+with st.sidebar.expander("ℹ️ What are these?"):
+    st.markdown("""
+    **Base Firing Rate** — How often each neuron spikes *on average* without any stimulus.
+    Cortical neurons typically fire at 1-20 Hz. Higher = more active baseline.
+
+    **Refractory Period** — After firing, a neuron *cannot* fire again for this duration
+    (Na⁺ channels need to recover). Cortical neurons: ~1-3 ms.
+
+    **Synaptic Noise** — Random fluctuations in firing rate from background synaptic input.
+    At 0 = perfectly regular firing. At 1-2 = highly variable, more biologically realistic.
+    """)
 
 # Network parameters
 st.sidebar.markdown("### Network Dynamics")
 connectivity = st.sidebar.slider("Network Connectivity", 0.0, 0.5, 0.1, 0.05)
 correlation_strength = st.sidebar.slider("Population Correlation", 0.0, 1.0, 0.3, 0.1)
+with st.sidebar.expander("ℹ️ What are these?"):
+    st.markdown("""
+    **Network Connectivity** — Strength of recurrent feedback. When neurons fire, they
+    influence other neurons' firing rates. Higher values → oscillations and synchrony.
+    Real cortex: ~0.1-0.2 connection probability.
+
+    **Population Correlation** — How much neurons share common input fluctuations.
+    At 0 = independent. At 0.3 = typical cortical correlation (shared synaptic input).
+    At 0.8+ = highly synchronized (pathological, seizure-like).
+    """)
 
 # Stimulus parameters
 st.sidebar.markdown("### External Stimulus")
 stimulus_start = st.sidebar.slider("Stimulus Start (ms)", 100, 800, 300, 50)
 stimulus_duration = st.sidebar.slider("Stimulus Duration (ms)", 50, 500, 200, 50)
 stimulus_strength = st.sidebar.slider("Stimulus Strength", 0.0, 3.0, 1.0, 0.1)
+with st.sidebar.expander("ℹ️ What are these?"):
+    st.markdown("""
+    **Stimulus Start/Duration** — When and how long the external drive is applied.
+    Think of this as a sensory stimulus (like a flash of light) that excites the population.
+
+    **Stimulus Strength** — How much the stimulus boosts firing rates.
+    At 1.0 = doubles the rate during stimulus. At 0 = no stimulus.
+    This mimics how sensory input increases neural excitability.
+    """)
 
 class NeuralPopulationSimulator:
     def __init__(self, N, T, dt=0.1):
@@ -702,7 +804,14 @@ tab1, tab2, tab3, tab4 = st.tabs(["📊 Population Dynamics", "🎯 Raster Plot"
 
 with tab1:
     st.markdown('<p class="section-header">📊 Population Firing Rate Dynamics</p>', unsafe_allow_html=True)
-    
+    st.markdown("""
+    <div class="highlight-box">
+    <p>📊 <strong>What this shows:</strong> The average firing rate across all neurons over time.
+    The red shaded region marks when the stimulus is active — you should see the rate increase there.
+    The bottom plot compares the stochastic simulation against a deterministic mean-field prediction.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
     if st.session_state.simulation_done:
         simulator = st.session_state.simulator
         pop_rate = st.session_state.pop_rate
@@ -795,7 +904,16 @@ with tab1:
 
 with tab2:
     st.markdown('<p class="section-header">🎯 Neural Raster Plot</p>', unsafe_allow_html=True)
-    
+    st.markdown("""
+    <div class="highlight-box">
+    <p>🎯 <strong>What this shows:</strong> Each dot is a single spike from a single neuron. Each row = one neuron, x-axis = time.
+    <strong>Vertical stripes</strong> mean neurons are firing together (synchrony).
+    <strong>Scattered dots</strong> mean independent firing (asynchronous).
+    Below: the inter-spike interval (ISI) distribution tells you how regular each neuron's firing is,
+    and the rate distribution shows how rates vary across the population.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
     if st.session_state.simulation_done:
         simulator = st.session_state.simulator
         
@@ -869,7 +987,14 @@ with tab2:
 
 with tab3:
     st.markdown('<p class="section-header">📈 Statistical Analysis</p>', unsafe_allow_html=True)
-    
+    st.markdown("""
+    <div class="highlight-box">
+    <p>📈 <strong>What this shows:</strong> Quantitative analysis of the simulation output.
+    The <strong>correlation matrix</strong> reveals which neurons tend to fire together (warm colors = correlated).
+    The <strong>power spectrum</strong> reveals oscillatory patterns — peaks indicate rhythmic activity at specific frequencies.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
     if st.session_state.simulation_done:
         simulator = st.session_state.simulator
         pop_rate = st.session_state.pop_rate
