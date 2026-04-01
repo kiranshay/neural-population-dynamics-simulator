@@ -607,7 +607,7 @@ st.markdown('<div class="subtitle">Monte Carlo Simulation of Stochastic Neural N
 # Mobile hint — sidebar is collapsed by default
 st.markdown("""
 <div class="highlight-box" style="margin-bottom: 1rem;">
-<p>👈 <strong>Getting started:</strong> Open the sidebar (arrow at top-left or swipe right on mobile)
+<p>👈 <strong>Getting started:</strong> Open the sidebar (arrow at top-left)
 to configure simulation parameters, then click <strong>Run Simulation</strong>.</p>
 </div>
 """, unsafe_allow_html=True)
@@ -894,22 +894,26 @@ with tab1:
             
     else:
         st.info("👈 Click 'Run Simulation' in the sidebar to generate population dynamics visualization")
-        
-        # Show example plot
-        st.markdown("### Example: What You'll See")
-        t_example = np.linspace(0, 1000, 1000)
-        rate_example = 10 + 5*np.sin(2*np.pi*t_example/200) + np.random.normal(0, 2, len(t_example))
-        rate_example[300:500] += 15  # Stimulus response
-        
+
+        # Show preview plot using actual sidebar parameters
+        st.markdown("### Preview: Expected Response Profile")
+        t_preview = np.linspace(0, simulation_time, 1000)
+        np.random.seed(42)  # Consistent preview
+        rate_preview = base_firing_rate + noise_strength * 3 * np.sin(2 * np.pi * t_preview / 200) + np.random.normal(0, noise_strength * 1.5, len(t_preview))
+        stim_mask = (t_preview >= stimulus_start) & (t_preview <= stimulus_start + stimulus_duration)
+        rate_preview[stim_mask] += base_firing_rate * stimulus_strength
+        rate_preview = np.maximum(rate_preview, 0)
+
         fig, ax = plt.subplots(figsize=(10, 3.5))
-        ax.plot(t_example, rate_example, 'b-', alpha=0.8)
-        ax.axvspan(300, 500, alpha=0.3, color='red', label='Stimulus')
+        ax.plot(t_preview, rate_preview, 'b-', alpha=0.8)
+        ax.axvspan(stimulus_start, stimulus_start + stimulus_duration, alpha=0.3, color='red', label='Stimulus')
         ax.set_xlabel('Time (ms)')
         ax.set_ylabel('Population Rate (Hz)')
-        ax.set_title('Example: Neural Population Response to Stimulus')
+        ax.set_title(f'Preview: {N_neurons} neurons, {base_firing_rate} Hz base rate, stimulus ×{1+stimulus_strength:.1f}')
         ax.grid(True, alpha=0.3)
         ax.legend()
         st.pyplot(fig)
+        st.caption("This is an approximate preview. Run the simulation for accurate Gillespie-sampled dynamics.")
 
 with tab2:
     st.markdown('<p class="section-header">🎯 Neural Raster Plot</p>', unsafe_allow_html=True)
