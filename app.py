@@ -204,7 +204,7 @@ st.markdown("""
         font-family: 'Inter', sans-serif;
         font-size: 1rem;
         font-weight: 600;
-        color: #334155;
+        color: #334155 !important;
         margin: 0 0 0.75rem 0;
         display: flex;
         align-items: center;
@@ -212,24 +212,29 @@ st.markdown("""
     }
 
     .concept-card p, .concept-card li {
-        color: #1e293b;
+        color: #1e293b !important;
         line-height: 1.7;
         margin-bottom: 0.5rem;
     }
 
     /* Highlight box */
     .highlight-box {
-        background: linear-gradient(135deg, #ede9fe 0%, #e0e7ff 100%);
-        border: 1px solid #c7d2fe;
+        background: #f0f0ff;
+        border: 2px solid #818cf8;
         border-radius: 10px;
         padding: 1rem 1.25rem;
         margin: 1rem 0;
     }
 
     .highlight-box p {
-        color: #4338ca;
+        color: #1e1b4b !important;
         font-weight: 500;
         margin: 0;
+        line-height: 1.6;
+    }
+
+    .highlight-box strong {
+        color: #1e1b4b !important;
     }
 
     /* Key point callout */
@@ -250,10 +255,14 @@ st.markdown("""
     }
 
     .key-point p {
-        color: #065f46;
+        color: #065f46 !important;
         font-weight: 500;
         margin: 0;
         line-height: 1.6;
+    }
+
+    .key-point strong {
+        color: #065f46 !important;
     }
 
     /* Definition list styling */
@@ -272,7 +281,7 @@ st.markdown("""
     }
 
     .def-desc {
-        color: #1e293b;
+        color: #1e293b !important;
         line-height: 1.5;
     }
 
@@ -304,12 +313,12 @@ st.markdown("""
     }
 
     .step-content {
-        color: #1e293b;
+        color: #1e293b !important;
         line-height: 1.6;
     }
 
     .step-content strong {
-        color: #0f172a;
+        color: #0f172a !important;
     }
 
     /* Parameter cards */
@@ -336,7 +345,7 @@ st.markdown("""
     }
 
     .param-card p {
-        color: #334155;
+        color: #334155 !important;
         font-size: 0.9rem;
         margin: 0;
         line-height: 1.5;
@@ -383,7 +392,7 @@ st.markdown("""
     }
 
     .state-card .props {
-        color: #1e293b;
+        color: #1e293b !important;
         font-size: 0.9rem;
         line-height: 1.6;
     }
