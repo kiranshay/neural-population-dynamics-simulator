@@ -444,6 +444,30 @@ st.markdown("""
         color: #cbd5e1 !important;
     }
 
+    /* Sidebar expander text — force light colors on dark background */
+    [data-testid="stSidebar"] [data-testid="stExpander"] {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+    }
+
+    [data-testid="stSidebar"] [data-testid="stExpander"] summary,
+    [data-testid="stSidebar"] [data-testid="stExpander"] summary span,
+    [data-testid="stSidebar"] [data-testid="stExpander"] summary p {
+        color: #94a3b8 !important;
+    }
+
+    [data-testid="stSidebar"] [data-testid="stExpander"] p,
+    [data-testid="stSidebar"] [data-testid="stExpander"] span,
+    [data-testid="stSidebar"] [data-testid="stExpander"] li,
+    [data-testid="stSidebar"] [data-testid="stExpander"] div {
+        color: #e2e8f0 !important;
+    }
+
+    [data-testid="stSidebar"] [data-testid="stExpander"] strong {
+        color: #f8fafc !important;
+    }
+
     /* Info Box */
     .stAlert {
         border-radius: 12px;
