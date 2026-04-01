@@ -1032,19 +1032,38 @@ with tab3:
         
         with col2:
             st.markdown("#### Correlation Analysis")
-            
-            # Calculate pairwise correlations for subset of neurons
+
+            # Compute spike count correlations in 50ms windows (not raw 0.1ms bins)
             n_corr = min(20, N_neurons)
-            correlation_matrix = np.corrcoef(simulator.spike_trains[:n_corr])
-            
+            bin_width = int(50 / simulator.dt)  # 50ms bins
+            n_bins = len(simulator.t) // bin_width
+
+            if n_bins > 1:
+                # Bin spike trains into 50ms windows
+                spike_counts = np.zeros((n_corr, n_bins))
+                for i in range(n_corr):
+                    for b in range(n_bins):
+                        spike_counts[i, b] = np.sum(
+                            simulator.spike_trains[i, b*bin_width:(b+1)*bin_width]
+                        )
+
+                # Only compute correlation if there's variance
+                valid = np.std(spike_counts, axis=1) > 0
+                if np.sum(valid) > 1:
+                    correlation_matrix = np.corrcoef(spike_counts[valid])
+                else:
+                    correlation_matrix = np.eye(n_corr)
+            else:
+                correlation_matrix = np.eye(n_corr)
+
             fig, ax = plt.subplots(figsize=(5, 3.5))
-            im = ax.imshow(correlation_matrix, cmap='RdBu_r', vmin=-1, vmax=1)
-            ax.set_title('Spike Train Correlations')
+            im = ax.imshow(correlation_matrix, cmap='RdBu_r', vmin=-0.5, vmax=0.5)
+            ax.set_title('Spike Count Correlations (50ms bins)')
             ax.set_xlabel('Neuron ID')
             ax.set_ylabel('Neuron ID')
             plt.colorbar(im, ax=ax, label='Correlation')
             st.pyplot(fig)
-            
+
             mean_correlation = np.mean(correlation_matrix[np.triu_indices_from(correlation_matrix, k=1)])
             st.metric("Mean Pairwise Correlation", f"{mean_correlation:.3f}")
         
