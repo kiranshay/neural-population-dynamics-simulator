@@ -468,6 +468,53 @@ st.markdown("""
         color: #764ba2;
     }
 
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .main-header {
+            font-size: 1.75rem;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+        }
+
+        .metric-container {
+            padding: 0.75rem;
+            border-radius: 12px;
+        }
+
+        .metric-container h3 {
+            font-size: 1.25rem;
+        }
+
+        .section-header {
+            font-size: 1.35rem;
+        }
+
+        .param-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .def-item {
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .def-term {
+            min-width: auto;
+        }
+
+        .algo-step {
+            gap: 0.5rem;
+        }
+
+        .stTabs [data-baseweb="tab"] {
+            height: 40px;
+            padding: 0 12px;
+            font-size: 0.8rem;
+        }
+    }
+
     /* Button Styling */
     .stButton > button {
         font-family: 'Inter', sans-serif;
@@ -503,7 +550,7 @@ simulation_time = st.sidebar.slider("Simulation Time (ms)", 100, 2000, 1000, 100
 # Neural parameters
 st.sidebar.markdown("### Neural Properties")
 base_firing_rate = st.sidebar.slider("Base Firing Rate (Hz)", 1.0, 50.0, 10.0, 1.0)
-refractory_period = st.sidebar.slider("Refractory Period (ms)", 1.0, 10.0, 2.0, 0.5)
+refractory_period = st.sidebar.slider("Refractory Period (ms)", 1.0, 5.0, 2.0, 0.5)
 noise_strength = st.sidebar.slider("Synaptic Noise", 0.0, 2.0, 0.5, 0.1)
 
 # Network parameters
@@ -550,7 +597,9 @@ class NeuralPopulationSimulator:
         
         # Generate correlated noise
         if correlation > 0:
-            correlation_matrix = correlation * np.ones((self.N, self.N)) + (1-correlation) * np.eye(self.N)
+            # Clamp correlation slightly below 1 to ensure positive-definite matrix
+            rho = min(correlation, 0.999)
+            correlation_matrix = rho * np.ones((self.N, self.N)) + (1-rho) * np.eye(self.N)
             L = np.linalg.cholesky(correlation_matrix)
         
         t_idx = 0
@@ -582,9 +631,13 @@ class NeuralPopulationSimulator:
                 else:
                     rates *= np.exp(np.random.normal(0, noise, self.N))
                 
-                # Network coupling (simplified)
-                recent_activity = np.sum([len([s for s in spikes if t_current - 10 < s <= t_current]) 
-                                        for spikes in self.spike_times])
+                # Network coupling (mean-field approximation)
+                # Count spikes in last 10ms window across all neurons
+                recent_activity = sum(
+                    1 for spikes in self.spike_times
+                    for s in reversed(spikes)
+                    if t_current - 10 < s <= t_current
+                ) if connectivity > 0 else 0
                 network_effect = connectivity * recent_activity / self.N
                 rates *= (1 + network_effect)
                 
@@ -607,7 +660,7 @@ class NeuralPopulationSimulator:
                     # Update spike trains
                     spike_idx = int(t_current / self.dt)
                     if spike_idx < len(self.t):
-                        self.spike_trains[neuron_idx, spike_idx] = 1
+                        self.spike_trains[neuron_idx, spike_idx] += 1
                 
                 # Update time index
                 while t_idx < len(self.t) and self.t[t_idx] <= t_current:
@@ -655,7 +708,7 @@ with tab1:
         pop_rate = st.session_state.pop_rate
         
         # Create main plot
-        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 8), sharex=True)
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 6), sharex=True)
         
         # Population rate
         ax1.plot(simulator.t, pop_rate, 'b-', linewidth=2, alpha=0.8)
@@ -685,36 +738,35 @@ with tab1:
         st.pyplot(fig)
         
         # Display key metrics
-        col1, col2, col3, col4 = st.columns(4)
-        
-        with col1:
+        total_spikes = sum(len(spikes) for spikes in simulator.spike_times)
+        cv_isi = np.std(pop_rate) / np.mean(pop_rate) if np.mean(pop_rate) > 0 else 0
+        peak_rate = np.max(pop_rate)
+
+        met1, met2 = st.columns(2)
+        with met1:
             st.markdown(f"""
             <div class="metric-container">
                 <h3>{np.mean(pop_rate):.1f} Hz</h3>
                 <p>Mean Population Rate</p>
             </div>
             """, unsafe_allow_html=True)
-        
-        with col2:
-            total_spikes = sum(len(spikes) for spikes in simulator.spike_times)
+        with met2:
             st.markdown(f"""
             <div class="metric-container">
                 <h3>{total_spikes:,}</h3>
                 <p>Total Spikes</p>
             </div>
             """, unsafe_allow_html=True)
-        
-        with col3:
-            cv_isi = np.std(pop_rate) / np.mean(pop_rate) if np.mean(pop_rate) > 0 else 0
+
+        met3, met4 = st.columns(2)
+        with met3:
             st.markdown(f"""
             <div class="metric-container">
                 <h3>{cv_isi:.3f}</h3>
                 <p>Rate Variability (CV)</p>
             </div>
             """, unsafe_allow_html=True)
-        
-        with col4:
-            peak_rate = np.max(pop_rate)
+        with met4:
             st.markdown(f"""
             <div class="metric-container">
                 <h3>{peak_rate:.1f} Hz</h3>
@@ -731,7 +783,7 @@ with tab1:
         rate_example = 10 + 5*np.sin(2*np.pi*t_example/200) + np.random.normal(0, 2, len(t_example))
         rate_example[300:500] += 15  # Stimulus response
         
-        fig, ax = plt.subplots(figsize=(10, 4))
+        fig, ax = plt.subplots(figsize=(10, 3.5))
         ax.plot(t_example, rate_example, 'b-', alpha=0.8)
         ax.axvspan(300, 500, alpha=0.3, color='red', label='Stimulus')
         ax.set_xlabel('Time (ms)')
@@ -748,7 +800,7 @@ with tab2:
         simulator = st.session_state.simulator
         
         # Create raster plot
-        fig, ax = plt.subplots(figsize=(12, 8))
+        fig, ax = plt.subplots(figsize=(10, 6))
         
         # Plot spikes for subset of neurons for clarity
         n_show = min(100, N_neurons)
@@ -786,7 +838,7 @@ with tab2:
                     all_isis.extend(isis)
             
             if all_isis:
-                fig, ax = plt.subplots(figsize=(6, 4))
+                fig, ax = plt.subplots(figsize=(5, 3.5))
                 ax.hist(all_isis, bins=30, alpha=0.7, color='skyblue', edgecolor='black')
                 ax.set_xlabel('Inter-Spike Interval (ms)')
                 ax.set_ylabel('Count')
@@ -801,7 +853,7 @@ with tab2:
                 rate = len(spikes) / (simulation_time / 1000.0)  # Hz
                 individual_rates.append(rate)
             
-            fig, ax = plt.subplots(figsize=(6, 4))
+            fig, ax = plt.subplots(figsize=(5, 3.5))
             ax.hist(individual_rates, bins=20, alpha=0.7, color='lightcoral', edgecolor='black')
             ax.axvline(np.mean(individual_rates), color='red', linestyle='--', 
                       label=f'Mean: {np.mean(individual_rates):.1f} Hz')
@@ -847,7 +899,7 @@ with tab3:
             n_corr = min(20, N_neurons)
             correlation_matrix = np.corrcoef(simulator.spike_trains[:n_corr])
             
-            fig, ax = plt.subplots(figsize=(6, 5))
+            fig, ax = plt.subplots(figsize=(5, 3.5))
             im = ax.imshow(correlation_matrix, cmap='RdBu_r', vmin=-1, vmax=1)
             ax.set_title('Spike Train Correlations')
             ax.set_xlabel('Neuron ID')
@@ -877,7 +929,7 @@ with tab3:
         freqs_pos = freqs[pos_mask]
         power_pos = power_spectrum[pos_mask]
         
-        fig, ax = plt.subplots(figsize=(10, 4))
+        fig, ax = plt.subplots(figsize=(10, 3.5))
         ax.loglog(freqs_pos, power_pos, 'b-', alpha=0.8)
         ax.set_xlabel('Frequency (Hz)')
         ax.set_ylabel('Power Spectral Density')
