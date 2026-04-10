@@ -16,32 +16,31 @@ st.set_page_config(
 # Custom CSS for professional styling
 st.markdown("""
 <style>
-    /* Import Google Font */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap');
 
     /* Global styles */
     .main .block-container {
         padding-top: 2rem;
         max-width: 1200px;
+        font-family: 'Source Sans 3', sans-serif;
+        color: #D4E0D4;
     }
 
     .main-header {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Azeret Mono', monospace;
         font-size: 2.75rem;
         font-weight: 700;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        color: #00FF41;
         text-align: center;
         margin-bottom: 0.5rem;
         letter-spacing: -0.02em;
+        text-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
     }
 
     .subtitle {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Source Sans 3', sans-serif;
         font-size: 1.1rem;
-        color: #64748b;
+        color: #6B8A6B;
         text-align: center;
         margin-bottom: 2rem;
         font-weight: 400;
@@ -50,11 +49,10 @@ st.markdown("""
     /* Enhanced Tab Styling */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
-        background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+        background: #0A0C0A;
         padding: 8px;
         border-radius: 16px;
-        border: 1px solid #e2e8f0;
-        box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
+        border: 1px solid rgba(0, 255, 65, 0.12);
     }
 
     .stTabs [data-baseweb="tab"] {
@@ -62,23 +60,23 @@ st.markdown("""
         background: transparent;
         border-radius: 12px;
         padding: 0 24px;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Azeret Mono', monospace;
         font-weight: 600;
         font-size: 0.95rem;
-        color: #475569;
-        border: none;
+        color: #6B8A6B;
+        border: 1px solid rgba(0, 255, 65, 0.12);
         transition: all 0.2s ease;
     }
 
     .stTabs [data-baseweb="tab"]:hover {
-        background: rgba(102, 126, 234, 0.08);
-        color: #667eea;
+        background: rgba(0, 255, 65, 0.08);
+        color: #00FF41;
     }
 
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-        color: white !important;
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.35);
+        background: #00FF41 !important;
+        color: #0A0C0A !important;
+        box-shadow: 0 4px 12px rgba(0, 255, 65, 0.25);
     }
 
     .stTabs [data-baseweb="tab-highlight"] {
@@ -91,88 +89,85 @@ st.markdown("""
 
     /* Metric Cards */
     .metric-container {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: #111611;
         padding: 1.25rem;
         border-radius: 16px;
-        color: white;
+        color: #D4E0D4;
         text-align: center;
-        box-shadow: 0 8px 24px rgba(102, 126, 234, 0.25);
-        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 0 12px rgba(0, 255, 65, 0.08);
+        border: 1px solid rgba(0, 255, 65, 0.12);
     }
 
     .metric-container h3 {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Azeret Mono', monospace;
         font-size: 1.75rem;
         font-weight: 700;
         margin: 0 0 4px 0;
+        color: #00FF41;
     }
 
     .metric-container p {
         font-size: 0.85rem;
-        opacity: 0.9;
+        color: #6B8A6B;
         margin: 0;
         font-weight: 500;
     }
 
     /* Theory Box */
     .theory-box {
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-        border-left: 4px solid #667eea;
+        background: #111611;
+        border-left: 4px solid #00FF41;
         padding: 1.5rem;
         margin: 1.25rem 0;
         border-radius: 0 12px 12px 0;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        box-shadow: 0 0 8px rgba(0, 255, 65, 0.06);
     }
 
     .theory-box h4 {
-        font-family: 'Inter', sans-serif;
-        color: #334155;
+        font-family: 'Azeret Mono', monospace;
+        color: #00FF41;
         margin-top: 0;
         font-weight: 600;
     }
 
     .theory-box h5 {
-        font-family: 'Inter', sans-serif;
-        color: #475569;
+        font-family: 'Azeret Mono', monospace;
+        color: #FFB627;
         margin-top: 1rem;
         font-weight: 600;
     }
 
     /* Section Headers - Enhanced */
     .section-header {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Azeret Mono', monospace;
         font-size: 1.75rem;
         font-weight: 700;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        color: #00FF41;
         margin-bottom: 1.5rem;
         padding-bottom: 0.75rem;
-        border-bottom: 3px solid;
-        border-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%) 1;
+        border-bottom: 3px solid #00FF41;
         display: block;
     }
 
     /* Subsection Headers */
     .subsection-header {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Azeret Mono', monospace;
         font-size: 1.35rem;
         font-weight: 600;
-        color: #334155;
+        color: #D4E0D4;
         margin: 2rem 0 1rem 0;
         padding: 0.75rem 1rem;
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-        border-left: 4px solid #667eea;
+        background: #111611;
+        border-left: 4px solid #00FF41;
         border-radius: 0 8px 8px 0;
     }
 
     /* Expander styling */
     .streamlit-expanderHeader {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Azeret Mono', monospace;
         font-weight: 600;
         font-size: 1.05rem;
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        background: #111611;
         border-radius: 10px;
     }
 
@@ -180,31 +175,31 @@ st.markdown("""
     [data-testid="stExpander"] p,
     [data-testid="stExpander"] li,
     [data-testid="stExpander"] span {
-        color: #1e293b !important;
+        color: #D4E0D4 !important;
     }
 
     [data-testid="stExpander"] strong {
-        color: #0f172a !important;
+        color: #00FF41 !important;
     }
 
     [data-testid="stExpander"] em {
-        color: #334155 !important;
+        color: #6B8A6B !important;
     }
 
     /* Content cards inside expanders */
     .concept-card {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
+        background: #111611;
+        border: 1px solid rgba(0, 255, 65, 0.12);
         border-radius: 12px;
         padding: 1.25rem;
         margin: 1rem 0;
     }
 
     .concept-card h5 {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Azeret Mono', monospace;
         font-size: 1rem;
         font-weight: 600;
-        color: #334155 !important;
+        color: #00FF41 !important;
         margin: 0 0 0.75rem 0;
         display: flex;
         align-items: center;
@@ -212,29 +207,30 @@ st.markdown("""
     }
 
     .concept-card p, .concept-card li {
-        color: #1e293b !important;
+        color: #D4E0D4 !important;
         line-height: 1.7;
         margin-bottom: 0.5rem;
     }
 
     /* Highlight box */
     .highlight-box {
-        background: #f0f0ff;
-        border: 2px solid #818cf8;
-        border-radius: 10px;
+        background: #111611;
+        border: 1px solid rgba(0, 255, 65, 0.12);
+        border-left: 4px solid #00FF41;
+        border-radius: 0 10px 10px 0;
         padding: 1rem 1.25rem;
         margin: 1rem 0;
     }
 
     .highlight-box p {
-        color: #1e1b4b !important;
+        color: #D4E0D4 !important;
         font-weight: 500;
         margin: 0;
         line-height: 1.6;
     }
 
     .highlight-box strong {
-        color: #1e1b4b !important;
+        color: #00FF41 !important;
     }
 
     /* Key point callout */
@@ -242,8 +238,8 @@ st.markdown("""
         display: flex;
         align-items: flex-start;
         gap: 0.75rem;
-        background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-        border: 1px solid #6ee7b7;
+        background: rgba(0, 255, 65, 0.05);
+        border: 1px solid rgba(0, 255, 65, 0.2);
         border-radius: 10px;
         padding: 1rem 1.25rem;
         margin: 1rem 0;
@@ -255,14 +251,14 @@ st.markdown("""
     }
 
     .key-point p {
-        color: #065f46 !important;
+        color: #00FF41 !important;
         font-weight: 500;
         margin: 0;
         line-height: 1.6;
     }
 
     .key-point strong {
-        color: #065f46 !important;
+        color: #00FF41 !important;
     }
 
     /* Definition list styling */
@@ -270,18 +266,18 @@ st.markdown("""
         display: flex;
         margin-bottom: 0.75rem;
         padding: 0.5rem 0;
-        border-bottom: 1px solid #f1f5f9;
+        border-bottom: 1px solid rgba(0, 255, 65, 0.08);
     }
 
     .def-term {
         font-weight: 600;
-        color: #667eea;
+        color: #FFB627;
         min-width: 140px;
         flex-shrink: 0;
     }
 
     .def-desc {
-        color: #1e293b !important;
+        color: #D4E0D4 !important;
         line-height: 1.5;
     }
 
@@ -291,7 +287,7 @@ st.markdown("""
         align-items: flex-start;
         gap: 1rem;
         padding: 0.75rem 0;
-        border-bottom: 1px dashed #e2e8f0;
+        border-bottom: 1px dashed rgba(0, 255, 65, 0.12);
     }
 
     .algo-step:last-child {
@@ -299,8 +295,8 @@ st.markdown("""
     }
 
     .step-num {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+        background: #00FF41;
+        color: #0A0C0A;
         font-weight: 700;
         width: 28px;
         height: 28px;
@@ -313,12 +309,12 @@ st.markdown("""
     }
 
     .step-content {
-        color: #1e293b !important;
+        color: #D4E0D4 !important;
         line-height: 1.6;
     }
 
     .step-content strong {
-        color: #0f172a !important;
+        color: #00FF41 !important;
     }
 
     /* Parameter cards */
@@ -330,22 +326,22 @@ st.markdown("""
     }
 
     .param-card {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
+        background: #111611;
+        border: 1px solid rgba(0, 255, 65, 0.12);
         border-radius: 10px;
         padding: 1rem;
     }
 
     .param-card h6 {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Azeret Mono', monospace;
         font-size: 0.9rem;
         font-weight: 600;
-        color: #667eea;
+        color: #FFB627;
         margin: 0 0 0.5rem 0;
     }
 
     .param-card p {
-        color: #334155 !important;
+        color: #D4E0D4 !important;
         font-size: 0.9rem;
         margin: 0;
         line-height: 1.5;
@@ -353,8 +349,8 @@ st.markdown("""
 
     /* State cards for network regimes */
     .state-card {
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-        border: 2px solid #e2e8f0;
+        background: #111611;
+        border: 2px solid rgba(0, 255, 65, 0.12);
         border-radius: 14px;
         padding: 1.25rem;
         height: 100%;
@@ -362,37 +358,37 @@ st.markdown("""
     }
 
     .state-card:hover {
-        border-color: #667eea;
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        border-color: #00FF41;
+        box-shadow: 0 0 16px rgba(0, 255, 65, 0.15);
     }
 
     .state-card h4 {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Azeret Mono', monospace;
         font-size: 1.1rem;
         font-weight: 600;
-        color: #1e293b;
+        color: #00FF41;
         margin: 0 0 0.25rem 0;
     }
 
     .state-card .state-subtitle {
         font-style: italic;
-        color: #475569;
+        color: #6B8A6B;
         font-size: 0.9rem;
         margin-bottom: 0.75rem;
     }
 
     .state-card .params {
-        background: #e0e7ff;
+        background: rgba(0, 255, 65, 0.06);
         border-radius: 8px;
         padding: 0.75rem;
         margin: 0.75rem 0;
-        font-family: 'JetBrains Mono', monospace;
+        font-family: 'Azeret Mono', monospace;
         font-size: 0.8rem;
-        color: #3730a3;
+        color: #00FF41;
     }
 
     .state-card .props {
-        color: #1e293b !important;
+        color: #D4E0D4 !important;
         font-size: 0.9rem;
         line-height: 1.6;
     }
@@ -404,21 +400,23 @@ st.markdown("""
         border-radius: 10px;
         overflow: hidden;
         margin: 1rem 0;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        box-shadow: 0 0 8px rgba(0, 255, 65, 0.06);
     }
 
     .stMarkdown thead th {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+        background: #111611;
+        color: #00FF41;
+        font-family: 'Azeret Mono', monospace;
         font-weight: 600;
         padding: 0.75rem 1rem;
         text-align: left;
+        border-bottom: 2px solid #00FF41;
     }
 
     .stMarkdown tbody td {
         padding: 0.75rem 1rem;
-        border-bottom: 1px solid #e2e8f0;
-        color: #1e293b;
+        border-bottom: 1px solid rgba(0, 255, 65, 0.08);
+        color: #D4E0D4;
     }
 
     .stMarkdown tbody tr:last-child td {
@@ -426,79 +424,80 @@ st.markdown("""
     }
 
     .stMarkdown tbody tr:nth-child(even) {
-        background: #f8fafc;
+        background: rgba(0, 255, 65, 0.03);
     }
 
     /* Sidebar Styling */
     .css-1d391kg, [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+        background: #0A0C0A;
     }
 
     [data-testid="stSidebar"] .stMarkdown h2,
     [data-testid="stSidebar"] .stMarkdown h3 {
-        color: #f8fafc !important;
-        font-family: 'Inter', sans-serif;
+        color: #00FF41 !important;
+        font-family: 'Azeret Mono', monospace;
     }
 
     [data-testid="stSidebar"] .stSlider label {
-        color: #cbd5e1 !important;
+        color: #6B8A6B !important;
     }
 
-    /* Sidebar expander text — force light colors on dark background */
+    /* Sidebar expander text -- force light colors on dark background */
     [data-testid="stSidebar"] [data-testid="stExpander"] {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(0, 255, 65, 0.03);
+        border: 1px solid rgba(0, 255, 65, 0.12);
         border-radius: 8px;
     }
 
     [data-testid="stSidebar"] [data-testid="stExpander"] summary,
     [data-testid="stSidebar"] [data-testid="stExpander"] summary span,
     [data-testid="stSidebar"] [data-testid="stExpander"] summary p {
-        color: #94a3b8 !important;
+        color: #6B8A6B !important;
     }
 
     [data-testid="stSidebar"] [data-testid="stExpander"] p,
     [data-testid="stSidebar"] [data-testid="stExpander"] span,
     [data-testid="stSidebar"] [data-testid="stExpander"] li,
     [data-testid="stSidebar"] [data-testid="stExpander"] div {
-        color: #e2e8f0 !important;
+        color: #D4E0D4 !important;
     }
 
     [data-testid="stSidebar"] [data-testid="stExpander"] strong {
-        color: #f8fafc !important;
+        color: #00FF41 !important;
     }
 
     /* Info Box */
     .stAlert {
         border-radius: 12px;
-        border: none;
+        border: 1px solid rgba(0, 255, 65, 0.12);
+        background: #111611;
     }
 
     /* Footer */
     .footer {
         margin-top: 3rem;
         padding: 2rem;
-        background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+        background: #111611;
         border-radius: 16px;
-        border: 1px solid #e2e8f0;
+        border: 1px solid rgba(0, 255, 65, 0.12);
         text-align: center;
     }
 
     .footer p {
-        color: #64748b;
-        font-family: 'Inter', sans-serif;
+        color: #6B8A6B;
+        font-family: 'Source Sans 3', sans-serif;
         margin: 0.5rem 0;
     }
 
     .footer a {
-        color: #667eea;
+        color: #00FF41;
         text-decoration: none;
         font-weight: 500;
         transition: color 0.2s ease;
     }
 
     .footer a:hover {
-        color: #764ba2;
+        color: #FFB627;
     }
 
     /* Make plots responsive */
@@ -606,19 +605,20 @@ st.markdown("""
 
     /* Button Styling */
     .stButton > button {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Azeret Mono', monospace;
         font-weight: 600;
         border-radius: 10px;
         transition: all 0.2s ease;
     }
 
     .stButton > button[kind="primary"] {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: #00FF41;
+        color: #0A0C0A;
         border: none;
     }
 
     .stButton > button[kind="primary"]:hover {
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
         transform: translateY(-1px);
     }
 </style>
