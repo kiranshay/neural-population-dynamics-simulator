@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import scipy.stats as stats
 from scipy.integrate import odeint
 import time
+import io
 
 # Page configuration
 st.set_page_config(
@@ -628,6 +629,18 @@ st.markdown("""
 st.markdown('<div class="main-header">🧠 Neural Population Dynamics Simulator</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Monte Carlo Simulation of Stochastic Neural Networks</div>', unsafe_allow_html=True)
 
+with st.expander("Methodology: Gillespie Algorithm"):
+    st.markdown("""
+    This simulator uses the **Gillespie algorithm** (Stochastic Simulation Algorithm) for exact Monte Carlo simulation of neural spiking:
+
+    1. Each neuron's instantaneous firing rate \u03bb\u1d62(t) depends on base rate, refractory state, network input, and correlated noise
+    2. The next spike time is drawn from an exponential distribution: \u0394t ~ Exp(\u03a3\u03bb\u1d62)
+    3. The spiking neuron is chosen proportional to its rate: P(neuron i) = \u03bb\u1d62 / \u03a3\u03bb\u2c7c
+    4. Correlated noise is generated via Cholesky decomposition of the correlation matrix
+
+    This produces exact samples from the underlying continuous-time Markov process, unlike time-stepped approximations.
+    """)
+
 # Mobile hint — sidebar is collapsed by default
 st.markdown("""
 <div class="highlight-box" style="margin-bottom: 1rem;">
@@ -639,9 +652,36 @@ to configure simulation parameters, then click <strong>Run Simulation</strong>.<
 # Sidebar controls
 st.sidebar.markdown("## 🎛️ Simulation Parameters")
 
+# Parameter presets
+PRESETS = {
+    "Custom": None,
+    "Poisson Process": {"N": 50, "rate": 20.0, "refractory": 1.0, "noise": 0.0, "connectivity": 0.0, "correlation": 0.0},
+    "Bursting Network": {"N": 50, "rate": 10.0, "refractory": 3.0, "noise": 0.8, "connectivity": 0.4, "correlation": 0.7},
+    "Oscillatory Population": {"N": 50, "rate": 15.0, "refractory": 2.0, "noise": 0.5, "connectivity": 0.3, "correlation": 0.5},
+    "Stimulus-Driven": {"N": 100, "rate": 25.0, "refractory": 2.0, "noise": 0.3, "connectivity": 0.2, "correlation": 0.3},
+}
+
+preset_choice = st.sidebar.selectbox("Parameter Preset", list(PRESETS.keys()))
+
+if preset_choice != "Custom":
+    p = PRESETS[preset_choice]
+    st.session_state["preset_N"] = p["N"]
+    st.session_state["preset_rate"] = p["rate"]
+    st.session_state["preset_refractory"] = p["refractory"]
+    st.session_state["preset_noise"] = p["noise"]
+    st.session_state["preset_connectivity"] = p["connectivity"]
+    st.session_state["preset_correlation"] = p["correlation"]
+
 # Population parameters
 st.sidebar.markdown("### Population Settings")
-N_neurons = st.sidebar.slider("Number of Neurons", 50, 500, 200, 50)
+_default_N = st.session_state.pop("preset_N", 200) if preset_choice != "Custom" else 200
+_default_rate = st.session_state.pop("preset_rate", 10.0) if preset_choice != "Custom" else 10.0
+_default_refractory = st.session_state.pop("preset_refractory", 2.0) if preset_choice != "Custom" else 2.0
+_default_noise = st.session_state.pop("preset_noise", 0.5) if preset_choice != "Custom" else 0.5
+_default_connectivity = st.session_state.pop("preset_connectivity", 0.1) if preset_choice != "Custom" else 0.1
+_default_correlation = st.session_state.pop("preset_correlation", 0.3) if preset_choice != "Custom" else 0.3
+
+N_neurons = st.sidebar.slider("Number of Neurons", 50, 500, _default_N, 50)
 simulation_time = st.sidebar.slider("Simulation Time (ms)", 100, 2000, 1000, 100)
 with st.sidebar.expander("ℹ️ What are these?"):
     st.markdown("""
@@ -654,9 +694,9 @@ with st.sidebar.expander("ℹ️ What are these?"):
 
 # Neural parameters
 st.sidebar.markdown("### Neural Properties")
-base_firing_rate = st.sidebar.slider("Base Firing Rate (Hz)", 1.0, 50.0, 10.0, 1.0)
-refractory_period = st.sidebar.slider("Refractory Period (ms)", 1.0, 5.0, 2.0, 0.5)
-noise_strength = st.sidebar.slider("Synaptic Noise", 0.0, 2.0, 0.5, 0.1)
+base_firing_rate = st.sidebar.slider("Base Firing Rate (Hz)", 1.0, 50.0, _default_rate, 1.0)
+refractory_period = st.sidebar.slider("Refractory Period (ms)", 1.0, 5.0, _default_refractory, 0.5)
+noise_strength = st.sidebar.slider("Synaptic Noise", 0.0, 2.0, _default_noise, 0.1)
 with st.sidebar.expander("ℹ️ What are these?"):
     st.markdown("""
     **Base Firing Rate** — How often each neuron spikes *on average* without any stimulus.
@@ -671,8 +711,8 @@ with st.sidebar.expander("ℹ️ What are these?"):
 
 # Network parameters
 st.sidebar.markdown("### Network Dynamics")
-connectivity = st.sidebar.slider("Network Connectivity", 0.0, 0.5, 0.1, 0.05)
-correlation_strength = st.sidebar.slider("Population Correlation", 0.0, 1.0, 0.3, 0.1)
+connectivity = st.sidebar.slider("Network Connectivity", 0.0, 0.5, _default_connectivity, 0.05)
+correlation_strength = st.sidebar.slider("Population Correlation", 0.0, 1.0, _default_correlation, 0.1)
 with st.sidebar.expander("ℹ️ What are these?"):
     st.markdown("""
     **Network Connectivity** — Strength of recurrent feedback. When neurons fire, they
@@ -828,6 +868,14 @@ if st.sidebar.button("🚀 Run Simulation", type="primary"):
     st.session_state.simulator = simulator
     st.session_state.pop_rate = pop_rate
     st.session_state.simulation_done = True
+
+    # CSV export of spike times
+    csv_buffer = io.StringIO()
+    csv_buffer.write("neuron_id,spike_time\n")
+    for i, times in enumerate(simulator.spike_times):
+        for t in times:
+            csv_buffer.write(f"{i},{t:.4f}\n")
+    st.download_button("Download Spike Times (CSV)", csv_buffer.getvalue(), "spike_times.csv", "text/csv")
 
 # Main content tabs
 if 'simulation_done' not in st.session_state:
@@ -1091,6 +1139,36 @@ with tab3:
             mean_correlation = np.mean(correlation_matrix[np.triu_indices_from(correlation_matrix, k=1)])
             st.metric("Mean Pairwise Correlation", f"{mean_correlation:.3f}")
         
+        # Fano factor and CV of ISI
+        st.markdown("#### Spike Train Regularity")
+
+        spike_counts = np.array([len(spikes) for spikes in simulator.spike_times])
+        fano_factor = np.var(spike_counts) / np.mean(spike_counts) if np.mean(spike_counts) > 0 else 0
+
+        neuron_cv_isis = []
+        for spikes in simulator.spike_times:
+            if len(spikes) > 2:
+                isis = np.diff(spikes)
+                if np.mean(isis) > 0:
+                    neuron_cv_isis.append(np.std(isis) / np.mean(isis))
+        mean_cv_isi = np.mean(neuron_cv_isis) if neuron_cv_isis else 0
+
+        ff_col, cv_col = st.columns(2)
+        with ff_col:
+            st.markdown(f"""
+            <div class="metric-container">
+                <h3>{fano_factor:.3f}</h3>
+                <p>Fano Factor (var/mean of spike counts)</p>
+            </div>
+            """, unsafe_allow_html=True)
+        with cv_col:
+            st.markdown(f"""
+            <div class="metric-container">
+                <h3>{mean_cv_isi:.3f}</h3>
+                <p>Mean CV of ISI (across neurons)</p>
+            </div>
+            """, unsafe_allow_html=True)
+
         # Spectral analysis
         st.markdown("#### Spectral Analysis")
         
